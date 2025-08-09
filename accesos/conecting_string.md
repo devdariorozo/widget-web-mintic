@@ -2,7 +2,7 @@
 
 ```bash
     1.  AMBIENTE DE PRUEBAS
-        Widget-web-mintic
+        Widget-chat-web-mintic
 
         
 

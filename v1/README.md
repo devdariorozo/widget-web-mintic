@@ -1,12 +1,12 @@
-# WidgetWEB_Agendamiento_Pymes_ETB
+# WidgetChatWebMintic
 
-**Autor:** Ramón Dario Rozo Torres 24 de Enero de 2025
-**Última Modificación:** Ramón Dario Rozo Torres 26 de Junio de 2025
+**Autor:** Ramón Dario Rozo Torres 19 de Agosto de 2025
+**Última Modificación:** Ramón Dario Rozo Torres 19 de Agosto de 2025
 **Versión:** 1.0.0
 
 ## Descripción
 
-Widget chat web para la empresa ThomasGreg Sons.
+Widget chat web para la empresa MinTic.
 
 ## 📦 Información Técnica
 

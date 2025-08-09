@@ -3,6 +3,7 @@
 
 # MODULOS - LIBRERIAS
 /node_modules
+/package-lock.json
 
 # CARPETA UPLOADS
 /uploads/*
