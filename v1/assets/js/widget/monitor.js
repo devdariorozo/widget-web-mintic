@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (error) {
         // todo: notificamos
-        controlNotificaciones('error', 'Widget Chat Web Thomas Greg y Sons', 'Error al listar las opciones de control API, por favor inténtelo de nuevo y/o comuníquese con nosotros.');
+        controlNotificaciones('error', 'Widget Chat Web MinTic', 'Error al listar las opciones de control API, por favor inténtelo de nuevo y/o comuníquese con nosotros.');
     }
 
     // * CONFIGURACION DATATABLE CON PAGUINACION EN EL SERVIDOR
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('content_form').classList.remove('hide');
         document.getElementById('content_preload').classList.add('hide');
         // Notificamos
-        controlNotificaciones('success', 'Widget Chat Web Thomas Greg y Sons', 'Se listaron correctamente los registros en el sistema.');
+        controlNotificaciones('success', 'Widget Chat Web MinTic', 'Se listaron correctamente los registros en el sistema.');
     });
 
 
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // todo: alerta de confirmacion
         swal.fire({
             position: 'center',
-            title: 'Widget Chat Web Thomas Greg y Sons',
+            title: 'Widget Chat Web MinTic',
             html: `<i class="fas fa-hand-point-right"></i> Monitorear Chats?`,
             icon: 'info',
             showCancelButton: true,
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('content_preload').classList.remove('hide');
 
                 // todo: notificamos
-                controlNotificaciones('info', 'Widget Chat Web Thomas Greg y Sons', 'Consultando registros, por favor espere...');
+                controlNotificaciones('info', 'Widget Chat Web MinTic', 'Consultando registros, por favor espere...');
 
                 // todo: blindeje de campos
                 if (document.getElementById('txt_fechaInicial').value && document.getElementById('txt_fechaFinal').value && document.getElementById('txt_controlApi').value) {
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('content_preload').classList.add('hide');
                     document.getElementById('content_form').classList.remove('hide');
                     // todo: notificamos
-                    controlNotificaciones('warning', 'Widget Chat Web Thomas Greg y Sons', 'Tienes campos incorrectos en el formulario...');
+                    controlNotificaciones('warning', 'Widget Chat Web MinTic', 'Tienes campos incorrectos en el formulario...');
                     return;
                 }
 
@@ -389,7 +389,7 @@ async function listarRegistros(data, callback) {
             document.getElementById('total_error').textContent = await formatearNumeroMiles(result.data.filter(item => item.CONTROL_API === 'Error').length);
         } else {
             // todo: notificamos
-            controlNotificaciones('warning', 'Widget Chat Web Thomas Greg y Sons', result.message);
+            controlNotificaciones('warning', 'Widget Chat Web MinTic', result.message);
 
             // todo: Llamamos las funciones de validación
             valida_txt_fechaInicial();
@@ -398,7 +398,7 @@ async function listarRegistros(data, callback) {
         }
     } catch (error) {
         // todo: notificamos
-        controlNotificaciones('error', 'Widget Chat Web Thomas Greg y Sons', 'Error al listar los registros, por favor inténtelo de nuevo y/o comuníquese con nosotros.');
+        controlNotificaciones('error', 'Widget Chat Web MinTic', 'Error al listar los registros, por favor inténtelo de nuevo y/o comuníquese con nosotros.');
     }
 }
 

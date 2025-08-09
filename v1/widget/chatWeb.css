@@ -417,7 +417,7 @@ html, body {
 /* ! ESTILO PARA EL ÍCONO */
 #estadoChatWeb i {
   font-size: .7rem;       /* Tamaño de la fuente del ícono */
-  color: #11ce73 ;       /* Color verde (#FF6523) para el ícono */
+  color: #3ebfed ;       /* Color verde (#FF6523) para el ícono */
   margin-right: 5px;      /* Espacio entre el ícono y el texto */
 }
 

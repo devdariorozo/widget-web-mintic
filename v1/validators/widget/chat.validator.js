@@ -193,7 +193,7 @@ const cerrarChatAI = [
     body('responsable')
         .trim()
         .notEmpty().withMessage('El campo "Responsable" no puede estar vacío...')
-        .isIn(['Chat Web Thomas Greg y Sons']).withMessage('El campo "Responsable" debe ser "Chat Web Thomas Greg y Sons".'),
+        .isIn(['Chat Web MinTic']).withMessage('El campo "Responsable" debe ser "Chat Web MinTic".'),
 
 ];
 

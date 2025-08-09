@@ -74,19 +74,18 @@ const arbolChatBot = async (remitente, contenido) => {
     if (estadoGestionChat !== 'Cerrado') {
         try {
             // todo: Saludo Arbol
-            if (arbolChat === 'Saludo' || arbolChat === 'Alerta No Entiendo') {
-                if (contenido === '1') {
-                    // const pasoArbol = dataEstatica.arbol[2];
-                    // const descripcion = 'Se envian las instrucciones de uso del chat web.';
-                    // await modelChat.actualizar(idChat, pasoArbol, chatData);
-                    // await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.instrucciones, descripcion);
-                    
-                    // todo: Solicitar Formulario Inicial
-                    return await solicitarFormularioInicial(idChat, remitente);
-                } else if (contenido === '2') {
-                    return await clienteDesiste(idChat, remitente);
+            if (arbolChat === 'Saludo' || arbolChat === 'Alerta No Entiendo - Saludo') {
+                if (contenido === '1' || contenido === '2' || contenido === '3') {
+                    // todo: Solicitar Autorizacion Datos Personales
+                    return await solicitarAutorizacionDatosPersonales(idChat, remitente);
                 } else {
-                    return await manejarNoEntiendo(idChat, remitente);
+                    const pasoArbol = 'Alerta No Entiendo - Saludo';                    
+                    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
+                    ⚠️ <i>Por favor, seleccione una opción del 1 al 3.</i></p>`;
+
+                    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
+                    // todo: Volver a Solicitar Opciones Iniciales Ayuda
+                    return await solicitarOpcionesInicialesAyuda(idChat, remitente);
                 }
             }
 
@@ -99,16 +98,16 @@ const arbolChatBot = async (remitente, contenido) => {
             //     return await modelMensaje.crear(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.saludo, '-', dataEstatica.lecturaMensaje[0], 'Se crea el mensaje de bienvenida.', dataEstatica.estadoRegistro[0], dataEstatica.responsable);
             // }
 
-            // todo: Interaccion AI Soul Arbol
-            if (arbolChat === 'Interaccion AI Soul' || arbolChat === 'Alerta No Entiendo') {
+            // todo: Autorizacion Datos Personales Arbol
+            if (arbolChat === 'Autorizacion Datos Personales' || arbolChat === 'Alerta No Entiendo - Autorizacion Datos Personales') {
                 // ! Se refiere a consumir el endpoint de interaccion AI Soul
-                return await procesarMensajeAISoul(idChat, remitente, contenido);
+                return await procesarAutorizacionDatosPersonales(idChat, remitente, contenido);
             }
 
             return true;
         } catch (error) {
             // todo: Enviar mensaje de error por API
-            const api = 'Widget Chat Web Thomas Greg y Sons ';
+            const api = 'Widget Chat Web MinTic ';
             const procesoApi = 'Arbol Chat Bot';
             console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → arbolChatBot: ', error);
             return await errorAPI(api, procesoApi, error, idChat, remitente);
@@ -135,80 +134,46 @@ const clienteDesiste = async (idChat, remitente) => {
         return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[4], dataEstatica.despedida, chatData.descripcion);
     } catch (error) {
         // todo: Enviar mensaje de error por API
-        const api = 'Widget Chat Web Thomas Greg y Sons ';
+        const api = 'Widget Chat Web MinTic ';
         const procesoApi = 'Cliente Desiste';
         console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → clienteDesiste', error);
         return await errorAPI(api, procesoApi, error, idChat, remitente);
     }
 };
 
-// todo: Solicitar Formulario Inicial Arbol
-const solicitarFormularioInicial = async (idChat, remitente) => {
-    const solicitarFormularioInicialArbol = dataEstatica.arbol[4];
-    chatData.descripcion = 'Se solicita el formulario inicial.';
-    await modelChat.actualizar(idChat, solicitarFormularioInicialArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[6], dataEstatica.solicitarFormularioInicial, chatData.descripcion);
+// todo: Solicitar Opciones Iniciales Ayuda Arbol
+const solicitarOpcionesInicialesAyuda = async (idChat, remitente) => {
+    const solicitarOpcionesInicialesAyudaArbol = dataEstatica.arbol[0];
+    chatData.descripcion = 'Se solicita nuevamentelas opciones iniciales de ayuda.';
+    await modelChat.actualizar(idChat, solicitarOpcionesInicialesAyudaArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.opcionesInicialesAyuda, chatData.descripcion);
 };
 
-// todo: Procesar Mensaje AI Soul Arbol
-const procesarMensajeAISoul = async (idChat, remitente, contenido) => {
-    try {
-        const estructuraMensaje = {
-            provider: "web",
-            canal: 3,
-            idChat: idChat,
-            remitente: remitente,  // Este es el valor del remitente
-            estado: "START",  // Estado del mensaje, por ejemplo, "START" O "ATTENDING" O "END"
-            mensaje: contenido,  // El mensaje que envías
-            type: "TEXT"  // Tipo de mensaje, por ejemplo, "TEXT" o "MEDIA" o "VOICE"
-        };
-        
-        // Control de intentos
-        if (chatData.controlPeticiones <= 5) {
-            
-            // ? Consumir servicio de AI Soul
-            const response = await serviceSoulChat.procesarMensajeAISoul(estructuraMensaje);
-            chatData.resultadoApi = response.data;
+// todo: Solicitar Autorizacion Datos Personales Arbol
+const solicitarAutorizacionDatosPersonales = async (idChat, remitente) => {
+    const solicitarAutorizacionDatosPersonalesArbol = dataEstatica.arbol[4];
+    chatData.descripcion = 'Se solicita la autorización de datos personales.';
+    await modelChat.actualizar(idChat, solicitarAutorizacionDatosPersonalesArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.solicitarAutorizacionDatosPersonales, chatData.descripcion);
+};
 
-            // Si la respuesta tiene status 200 o 202
-            if (response.status === 200 || response.status === 202) {
-                // Variables
-                const pasoArbol = dataEstatica.arbol[6];
-                chatData.controlApi = dataEstatica.controlApi[0];
-                chatData.descripcion = 'AI Soul ha recibido el mensaje, se encuentra procesando la respuesta.';
+// todo: Procesar Autorizacion Datos Personales Arbol
+const procesarAutorizacionDatosPersonales = async (idChat, remitente, contenido) => {
+    // Convertir la primera letra a mayúscula y el resto a minúscula
+    contenido = contenido.charAt(0).toUpperCase() + contenido.slice(1).toLowerCase();
+    console.log('contenido: ', contenido);
+    if (contenido === 'Si') {
+        return await clienteDesiste(idChat, remitente);
+    } else if (contenido === 'No') {
+        return await clienteDesiste(idChat, remitente);
+    } else {
+        const pasoArbol = 'Alerta No Entiendo - Autorizacion Datos Personales';
+        const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
+        ⚠️ <i>Por favor, responda Si o No.</i></p>`;
 
-                // Actualizar el chat
-                return await modelChat.actualizar(idChat, pasoArbol, chatData);
-            } else {
-                // Variables
-                const pasoArbol = dataEstatica.arbol[6];
-                chatData.controlPeticiones++;
-                chatData.descripcion = 'AI Soul esta presentando una novedad o incidencia técnica.';
-                
-                // Actualizar el chat
-                await modelChat.actualizar(idChat, pasoArbol, chatData);
-
-                // todo: Enviar mensaje de error por API
-                const api = 'Soul Chat';
-                const procesoApi = 'Procesar Mensaje AI';
-                const error = response;
-                return await errorAPI(api, procesoApi, error, idChat, remitente);
-            }
-
-        } else {
-            chatData.descripcion = 'Se presenta novedad con el servicio de AI Soul, se procede a cerrar el chat por limite de intentos.';
-            // Crear mensaje de novedad o incidencia técnica
-            await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.novedadIncidenciaTecnica, chatData.descripcion);
-
-            // Solicitar cerrar el chat
-            await modelChat.cerrar(remitente, dataEstatica.estadoChat[0], dataEstatica.estadoGestion[1], dataEstatica.arbol[1], dataEstatica.controlApi[1], chatData.descripcion, dataEstatica.estadoRegistro[0], dataEstatica.responsable);
-        }
-
-    } catch (error) {
-        const api = 'Soul Chat';
-        const procesoApi = 'Procesar Mensaje AI';
-        console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → procesarMensajeAISoul: ', error);
-        return await errorAPI(api, procesoApi, error, idChat, remitente);
+        await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
+        // todo: Volver a Solicitar Autorizacion Datos Personales
+        return await solicitarAutorizacionDatosPersonales(idChat, remitente);
     }
 };
 
@@ -278,16 +243,16 @@ const procesarMensajeAISoul = async (idChat, remitente, contenido) => {
 // };
 
 // todo: Manejar no entender
-const manejarNoEntiendo = async (idChat, remitente) => {
+const manejarNoEntiendo = async (idChat, remitente, pasoArbol, alertaNoEntiendo) => {
     try {
-        const pasoArbol = dataEstatica.arbol[7];
         chatData.descripcion = 'Se notifica que no se entiende el mensaje.';
         await modelChat.actualizar(idChat, pasoArbol, chatData);
-        await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.alertaNoEntiendo, chatData.descripcion);
+        const mensaje = await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], alertaNoEntiendo, chatData.descripcion);
+        console.log('mensaje: ', mensaje);
         return true;
     } catch (error) {
         // todo: Enviar mensaje de error por API
-        const api = 'Widget Chat Web Thomas Greg y Sons ';
+        const api = 'Widget Chat Web MinTic ';
         const procesoApi = 'Funcion manejarNoEntiendo';
         console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → manejarNoEntiendo: ', error);
         return await errorAPI(api, procesoApi, error, idChat, remitente);

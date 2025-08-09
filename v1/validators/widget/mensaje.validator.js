@@ -84,7 +84,7 @@ const crearRespuestaAI = [
     body('responsable')
         .trim()
         .notEmpty().withMessage('El campo "responsable" no puede estar vacío...')
-        .isIn(['Chat Web Thomas Greg y Sons']).withMessage('El campo "responsable" debe ser "Chat Web Thomas Greg y Sons"'),
+        .isIn(['Chat Web MinTic']).withMessage('El campo "responsable" debe ser "Chat Web MinTic"'),
     
 ];
 

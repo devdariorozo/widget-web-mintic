@@ -19,7 +19,7 @@ CREATE TABLE `tbl_historico_chat` (
   `htcht_remitente` varchar(255) NOT NULL DEFAULT '-',
   `htcht_estado` varchar(45) NOT NULL DEFAULT '-',
   `htcht_gestion` varchar(45) NOT NULL DEFAULT '-',
-  `htcht_arbol` varchar(45) NOT NULL DEFAULT '-',
+  `htcht_arbol` varchar(255) NOT NULL DEFAULT '-',
   `htcht_control_api` LONGTEXT,
   `htcht_control_peticiones` varchar(45) NOT NULL DEFAULT 0,
   `htcht_resultado_api` LONGTEXT,

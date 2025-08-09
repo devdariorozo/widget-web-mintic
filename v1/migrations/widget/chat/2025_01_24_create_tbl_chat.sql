@@ -17,7 +17,7 @@ CREATE TABLE `tbl_chat` (
   `cht_remitente` varchar(255) NOT NULL DEFAULT '-',
   `cht_estado` varchar(45) NOT NULL DEFAULT '-',
   `cht_gestion` varchar(45) NOT NULL DEFAULT '-',
-  `cht_arbol` varchar(45) NOT NULL DEFAULT '-',
+  `cht_arbol` varchar(255) NOT NULL DEFAULT '-',
   `cht_control_api` LONGTEXT,
   `cht_control_peticiones` varchar(45) NOT NULL DEFAULT 0,
   `cht_resultado_api` LONGTEXT,
@@ -35,7 +35,7 @@ CREATE TABLE `tbl_chat` (
   `cht_descripcion` varchar(255) NOT NULL DEFAULT '-',
   `cht_registro` varchar(45) NOT NULL DEFAULT 'Activo',
   `cht_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `cht_responsable` varchar(45) NOT NULL DEFAULT 'Chat Web Thomas Greg y Sons',
+  `cht_responsable` varchar(45) NOT NULL DEFAULT 'Chat Web MinTic',
   PRIMARY KEY (`cht_id`)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

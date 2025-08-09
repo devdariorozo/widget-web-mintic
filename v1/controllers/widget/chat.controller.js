@@ -25,7 +25,7 @@ const crear = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -54,7 +54,7 @@ const crear = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: 'El chat ya existe en el sistema.'
             });
         }
@@ -75,65 +75,12 @@ const crear = async (req, res) => {
             let responsable = dataEstatica.responsable;
             const resultMensajeBienvenida = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
 
-            // ? Ahora enviamos el formulario inicial
-            // Actualizamos el chat
-            const solicitarFormularioInicialArbol = dataEstatica.arbol[4];
-            let controlApi = dataEstatica.controlApi[0];
-            let controlPeticiones = 0;
-            let resultadoApi = `{
-                "status": 200,
-                "type": "success",
-                "title": "Chat Web Thomas Greg y Sons",
-                "message": "Se solicita el formulario inicial."
-            }`;
-            let nombres = '-';
-            let apellidos = '-';
-            let numeroCedula = '-';
-            let paisResidencia = '-';
-            let ciudadResidencia = '-';
-            let indicativoPais = '-';
-            let numeroCelular = '-';
-            let correoElectronico = '-';
-            let autorizacionDatosPersonales = '-';
-            let adjuntos = '-';
-            let rutaAdjuntos = '-';
-            descripcion = 'Se solicita el formulario inicial.';
-            estadoRegistro = dataEstatica.estadoRegistro[0];
-            responsable = dataEstatica.responsable;
-
-            let chatData = {
-                idChat,
-                solicitarFormularioInicialArbol,
-                controlApi,
-                controlPeticiones,
-                resultadoApi,
-                nombres,
-                apellidos,
-                numeroCedula,
-                paisResidencia,
-                ciudadResidencia,
-                indicativoPais,
-                numeroCelular,
-                correoElectronico,
-                autorizacionDatosPersonales,
-                adjuntos,
-                rutaAdjuntos,
-                descripcion,
-                estadoRegistro,
-                responsable
-            };
-            await model.actualizar(idChat, solicitarFormularioInicialArbol, chatData);
-
-            // Creamos el mensaje
-            contenido = dataEstatica.solicitarFormularioInicial;
-            const resultMensajeFormularioInicial = await modelMensaje.crear(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[6], contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
-
-            if (resultMensajeBienvenida && resultMensajeFormularioInicial) {
+            if (resultMensajeBienvenida) {
                 // todo: Enviar respuesta
                 res.json({
                     status: 200,
                     type: 'success',
-                    title: 'Chat Web Thomas Greg y Sons',
+                    title: 'Chat Web MinTic',
                     message: 'El chat se ha creado correctamente en el sistema.',
                 });
             }
@@ -143,7 +90,7 @@ const crear = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo crear el chat, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -159,7 +106,7 @@ const formularioInicial = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -244,7 +191,7 @@ const formularioInicial = async (req, res) => {
                         res.json({
                             status: 200,
                             type: 'success',
-                            title: 'Chat Web Thomas Greg y Sons',
+                            title: 'Chat Web MinTic',
                             message: 'El formulario inicial se ha diligenciado correctamente en el sistema y se ha enviado el saludo al usuario, se brinda paso AI Soul.',
                         });
                     }
@@ -256,7 +203,7 @@ const formularioInicial = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo diligenciar el formulario inicial, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -272,7 +219,7 @@ const opcionesControlApi = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -287,7 +234,7 @@ const opcionesControlApi = async (req, res) => {
             res.json({
                 status: 200,
                 type: 'success',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: 'Opciones de control api listadas correctamente.',
                 data: result
             });
@@ -297,7 +244,7 @@ const opcionesControlApi = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo listar las opciones de control api, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -313,7 +260,7 @@ const monitor = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -341,7 +288,7 @@ const monitor = async (req, res) => {
             res.json({
                 status: 200,
                 type: 'success',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: 'Chats listados correctamente.',
                 data: result.data,
                 totalCount: result.totalCount,
@@ -353,7 +300,7 @@ const monitor = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo listar los chats, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -369,7 +316,7 @@ const listarArchivosAdjuntos = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -387,7 +334,7 @@ const listarArchivosAdjuntos = async (req, res) => {
             res.json({
                 status: 200,
                 type: 'success',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: 'Archivos adjuntos listados correctamente.',
                 data: result
             });
@@ -397,7 +344,7 @@ const listarArchivosAdjuntos = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo listar los archivos adjuntos, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -413,7 +360,7 @@ const filtrar = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -437,7 +384,7 @@ const filtrar = async (req, res) => {
             res.json({
                 status: 200,
                 type: 'success',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: 'Chat filtrado correctamente.',
                 data: result
             });
@@ -447,7 +394,7 @@ const filtrar = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo filtrar el chat, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -493,7 +440,7 @@ const cerrar = async (req, res) => {
                 res.json({
                     status: 200,
                     type: 'success',
-                    title: 'Chat Web Thomas Greg y Sons',
+                    title: 'Chat Web MinTic',
                     message: 'El chat se ha cerrado correctamente en el sistema.',
                 });
             }
@@ -504,7 +451,7 @@ const cerrar = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo cerrar el chat, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
@@ -520,7 +467,7 @@ const cerrarChatAI = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 type: 'warning',
-                title: 'Chat Web Thomas Greg y Sons',
+                title: 'Chat Web MinTic',
                 message: errors.array()[0].msg
             });
         }
@@ -559,7 +506,7 @@ const cerrarChatAI = async (req, res) => {
                 res.json({
                     status: 200,
                     type: 'success',
-                    title: 'Chat Web Thomas Greg y Sons',
+                    title: 'Chat Web MinTic',
                     message: 'El chat se ha cerrado correctamente en el sistema.',
                 });
             }
@@ -570,7 +517,7 @@ const cerrarChatAI = async (req, res) => {
         res.status(500).json({
             status: 500,
             type: 'error',
-            title: 'Chat Web Thomas Greg y Sons',
+            title: 'Chat Web MinTic',
             message: 'No se pudo cerrar el chat, por favor intenta de nuevo o comunícate con nosotros.',
             error: error.message
         });
