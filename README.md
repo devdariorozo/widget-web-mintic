@@ -1,2 +1,11 @@
-# -widget-web-mintic
-Widget con arbol para MinTic
+# widget-web-mintic
+Chat Web para Mintic
+
+
+
+
+
+
+
+
+

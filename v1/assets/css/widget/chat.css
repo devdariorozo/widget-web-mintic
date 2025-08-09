@@ -1,0 +1,603 @@
+/* 
+    ! ================================================================================================================================================
+    !                                                             CHAT WEB
+    ! ================================================================================================================================================    
+    @author Ramón Dario Rozo Torres (24 de Enero de 2025)
+    @lastModified Ramón Dario Rozo Torres (24 de Enero de 2025)
+    @version 1.0.0
+    v2/assets/css/widget/chat.css
+*/
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Solo el chat debe scrollear */
+}
+
+/* ! ESTILOS ESPECIFICOS DE LA PAGINA ACTUAL */
+/* Contenedor principal */
+#main {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh; /* Cambiado de 100vh a 100dvh para móviles modernos */
+    width: 100vw;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 999997;
+}
+
+/* Contenedor para los mensajes */
+#conversacion {
+    flex: 1 1 auto;
+    overflow-y: auto; /* Solo aquí el scroll */
+    width: 100%;
+    background-color: #f5f5f5;
+    border-radius: 0.7rem;
+    padding: 1rem;
+    min-height: 0; /* Importante para que flexbox no rompa el scroll */
+    z-index: 999997;
+}
+
+/* Estilo para el mensaje recibido */
+.mensaje-recibido {
+    position: relative;
+    background-color: #DADADA; /* Color de fondo */
+    color: #000; /* Color del texto */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 0.7rem 1.2rem;
+    margin: 0.3rem 0 1rem 0; /* Solo margen inferior */
+    /* max-width: 75%; Limitar el ancho del mensaje */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra */
+    display: block; /* Cambiar a block */
+    align-self: flex-end; /* Alinear a la derecha */
+    position: relative; /* Para el pseudo-elemento */    
+    font-family: 'Redounded LT Pro', 
+    sans-serif;word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    overflow-wrap: break-word; /* Asegura que el texto se ajuste al contenedor */
+    white-space: normal; /* Mantiene los saltos de línea y ajusta el texto */
+}
+.label-fuerte {
+    font-family: 'Arial Black', sans-serif;
+    color: black;
+  }
+  
+/* Agregar un pseudo-elemento para simular la burbuja */
+.mensaje-recibido::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Colocar arriba del mensaje */
+    right: 10px; /* Ajustar la posición */
+    border-width: 10px;
+    border-style: solid;
+    border-color: #DADADA transparent transparent transparent; /* Triángulo invertido */
+}
+
+/* Estilo para el mensaje enviado */
+.mensaje-enviado {
+    position: relative;
+    background-color: #003058 ; /* Color de fondo */
+    color: #FFFFFF; /* Color del texto */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 0.7rem 1.2rem;
+    margin: 0.3rem 0 1rem 0; /* Solo margen inferior */
+    /* max-width: 75%; Limitar el ancho del mensaje */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra */
+    display: block; /* Cambiar a block */
+    align-self: flex-start; /* Alinear a la izquierda */
+    position: relative; /* Para el pseudo-elemento */
+    font-family: 'Redounded LT Pro', 
+    sans-serif;word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    overflow-wrap: break-word; /* Asegura que el texto se ajuste al contenedor */
+}
+
+/* Agregar un pseudo-elemento para simular la burbuja */
+.mensaje-enviado::after {
+    content: '';
+    position: absolute;
+    bottom: 100%; /* Colocar arriba del mensaje */
+    left: 10px; /* Ajustar la posición */
+    border-width: 7px;
+    border-style: solid;
+    border-color: transparent transparent #003058  transparent; /* Triángulo */
+}
+
+/* Estilo para las etiquetas <a> */
+a {
+    color: #214780; /* Color azul */
+    font-weight: bold; /* Negrita */
+    text-decoration: none; /* Sin subrayado */
+}
+
+a:hover {
+    text-decoration: underline; /* Subrayar al pasar el mouse */
+}
+
+/* * FORMULARIO DE CHAT */
+#contentFormTexto, #contentAdjuntos {
+    flex-shrink: 0;
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    z-index: 999997;
+    padding: 0.5rem 0.7rem;
+}
+
+#contentFormTexto {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#contentFormTexto .center {
+    margin-bottom: 1.5% !important;
+    padding-bottom: 0 !important;
+}
+
+/* ! ADJUNTOS */
+.filepond--root {
+    background-color: #f0f0f0; /* Cambia #f0f0f0 por el color que desees */
+}
+.filepond--credits {
+    display: none;
+}
+
+/* * CAMPO DE TEXTO */
+#txt_mensaje {
+    max-height: 8rem;
+    overflow-y: auto !important;
+    resize: none;
+    font-family: 'Redounded LT Pro', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #000;
+    border: none;
+    border-bottom: 1px solid #bdbdbd !important; /* Gris claro por defecto */
+    margin-bottom: 0 !important;
+    box-sizing: border-box;
+    background: #fff;
+    transition: border-bottom-width 0.2s, border-bottom-color 0.2s;
+}
+
+#txt_mensaje:focus {
+    outline: none !important;
+    border-bottom: 1px solid #11ce73 !important; /* Azul Materialize al enfocar */
+    background: #fff;
+}
+
+.input-field label[for="txt_mensaje"] {
+    color: #616161 !important; /* Gris oscuro siempre visible */
+    font-weight: 500;
+    z-index: 2;
+    background: transparent;
+    padding-left: 0.2rem;
+    top: 0.5rem;
+    left: 0.2rem;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+#txt_mensaje:focus + label {
+    color: #11ce73 !important; /* Azul intenso al enfocar */
+    font-weight: bold;
+}
+
+
+
+@media only screen and (max-width: 320px){
+    textarea#txt_mensaje {
+        font-size: 0.9rem;
+        min-height: 30px;
+    }
+}
+
+/* * BOTONES */
+#btnEnviar {
+    background: #003058  !important;
+}
+
+#btnEnviar:hover {
+    animation: btnEnviar 0.5s ease-in-out, scaleUp 0.3s ease-in-out; /* Efecto de escalado */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    transform: translateY(-1px); /* Elevar ligeramente el botón */
+}
+
+#btn_Continuar {
+    background: #0077B6  !important;
+  /*  box-shadow: 0 8px 16px rgba(255, 254, 254, 0.4);  Sombra más pronunciada */
+    transform: translateY(-1px); /* Elevar ligeramente el botón */
+}
+
+#btn_Continuar:hover {
+    animation: btnEnviar 0.5s ease-in-out, scaleUp 0.3s ease-in-out; /* Efecto de escalado */
+    box-shadow: 0 8px 16px rgba(255, 254, 254, 0.4); /* Sombra más pronunciada */
+    transform: translateY(-1px); /* Elevar ligeramente el botón */
+}
+
+#btnAdjuntos {
+    background: #003058  !important;
+}
+
+#btnAdjuntos:hover {
+    animation: btnEnviar 0.5s ease-in-out, scaleUp 0.3s ease-in-out; /* Efecto de escalado */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    transform: translateY(-1px); /* Elevar ligeramente el botón */
+}
+
+@keyframes btnEnviar {
+    0% { background: #003058 ; }
+    50% { background: #003058 ; }
+    100% { background: #003058 ; }
+}
+
+/* Estilos personalizados para Dropify */
+.file-item {
+    background-color: #DADADA;
+    color: #333333;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-item span {
+    display: block;
+}
+
+.file-item .file-name {
+    font-weight: bold; /* Negrita para el título */
+    margin-bottom: 2px;
+}
+
+.file-item .file-size {
+    color: #333333;
+    font-size: 10px;
+}
+
+.remove-file {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%); /* Centrar verticalmente */
+    background-color: #FF6523;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px; /* Asegúrate de que el ancho y alto sean iguales */
+    height: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px; /* Igual al alto para centrar */
+    font-size: 12px; /* Ajusta el tamaño de la fuente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropify-wrapper {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    height: 80px;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #777;
+    background-color: #E4E8F0;
+    background-image: none;
+    text-align: center;
+    border: 2px solid #AAB8D0;
+    -webkit-transition: border-color .15s linear;
+    transition: border-color .15s linear;
+}
+
+.dropify-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-family: 'Redounded LT Pro', sans-serif;
+}
+
+.dropify-message p {
+    margin: 0;
+    font-size: 14px;
+    color: #333333;
+    padding: 10px;
+}
+.dropify-wrapper .dropify-message p {
+    margin: 0;
+}
+
+/* Ocultar el elemento*/
+.file-icon {
+    display: none;
+}
+
+#archivosAdjuntosClienteArbol {
+    word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    overflow-wrap: break-word; /* Asegura que el texto se ajuste al contenedor */
+}
+
+#archivosAdjuntosClienteArbol a {
+    word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    overflow-wrap: break-word; /* Asegura que el texto se ajuste al contenedor */
+}
+
+.datos-diligenciados {
+    text-align: left !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.datos-diligenciados p b {
+    color: #000;
+    font-weight: bold;
+}
+.datos-diligenciados strong.label-fuerte {
+    color: #000;
+    font-weight: bold;
+}
+.datos-diligenciados {
+    color: #000;
+    font-weight: normal;
+}
+.datos-diligenciados b {
+    color: #000;
+    font-weight: bold;
+}
+.label-blanco {
+    color: white; /* Esto cambia el color de los labels a blanco */
+}
+
+.input-field input, .input-field label {
+    color: white !important; /* Esto cambia el color de los valores de los inputs a blanco */
+}
+
+.form-link {
+    color: #04a5fc !important; /* Esto cambia el color de los links a blanco */
+}
+
+.form-link:hover {
+    color: #0077B6 !important; /* Esto cambia el color de los links a blanco */
+    text-decoration: none !important; /* Subrayar al pasar el mouse */
+    text-shadow: 0 0 10px #0077B6; /* Sombra */
+}
+
+@media screen and (max-width: 600px) {
+  #conversacion {
+    height: 70vh;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .mensaje-recibido, .mensaje-enviado {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+  }
+  #contentFormTexto, #contentAdjuntos {
+    font-size: 0.95rem;
+    padding: 0.5rem;
+  }
+}
+
+/* ! MODAL TERMINOS Y CONDICIONES */
+.modal-overlay {
+  z-index: 1125000 !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+}
+
+.modal,
+.modal-content,
+.modal-body {
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden !important; /* Elimina el scroll horizontal */
+}
+
+.modal-content,
+.modal-body {
+  word-break: break-word;      /* Rompe palabras largas */
+  overflow-wrap: break-word;   /* Rompe palabras largas */
+  white-space: normal;         /* Permite saltos de línea */
+}
+
+.modal {
+  z-index: 1125001 !important;
+  background: #003058 !important;
+  color: #fff !important;
+  border-radius: 12px;
+  max-height: 90vh; /* Limita la altura máxima al 90% de la pantalla */
+  overflow: visible; /* No pongas scroll aquí */
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.modal-content {
+  background: #003058 !important;
+  color: #fff !important;
+  border-radius: 12px 12px 0 0;
+  max-height: 70vh; /* Ajusta según tu preferencia */
+  overflow-y: auto; /* Solo aquí el scroll */
+  user-select: text;
+  flex: 1 1 auto;
+  padding: 0 !important;
+}
+
+.modal-body {
+  text-align: justify;
+  font-size: 0.98em;
+  color: #fff;
+  /* Elimina max-height aquí si ya está en .modal-content */
+  overflow-y: visible; /* Deja el scroll solo en .modal-content */
+  padding: 0 1rem 1rem 1rem;
+}
+
+/* MODAL DE TÉRMINOS Y CONDICIONES */
+.modal-title {
+  color: #fff !important;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  background: #003058;
+  padding: 1rem 1rem 0.5rem 1rem;
+  position: sticky;
+  top: -1px;
+  z-index: 2;
+}
+
+.modal-footer {
+  background: #fff !important;
+  border-radius: 0 0 12px 12px;
+}
+
+.modal-footer .btn, .modal-footer .btn-flat {
+  color: #003058 !important;
+  font-weight: bold;
+}
+
+/* * SELECT2 */
+.select2-results .select2-results__options .select2-results__option strong.select2-results__group
+{
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+.select2-results .select2-results__options .select2-results__option .select2-result-repository
+{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+}
+
+.select2-results .select2-results__options .select2-results__option .select2-result-repository .select2-result-repository__avatar
+{
+    margin-right: 1rem;
+}
+
+.select2-results .select2-results__options .select2-results__option .select2-result-repository .select2-result-repository__avatar img
+{
+    width: 100px;
+}
+
+.select2-dropdown {
+    z-index: 1200000 !important;
+}
+
+.select2-search--dropdown .select2-search__field
+{
+    box-sizing: border-box !important;
+    padding: 0 1rem !important;
+}
+.select2-label.active {
+    color: cyan !important;
+    width: 100%;
+    left: 0.75rem;
+    position: absolute;
+    font-size: 0.8rem;
+    transition: 0.2s ease all;
+    -webkit-transform: translateY(-14px) scale(.8);
+    transform-origin: 0 0;
+}
+.select2-label.active-ok {
+    color: #9e9e9e !important;
+    width: 100%;
+    left: 0.75rem;
+    position: absolute;
+    font-size: 0.8rem;
+    transition: 0.2s ease all;
+    -webkit-transform: translateY(-14px) scale(.8);
+    transform-origin: 0 0;
+}
+
+.red-text {
+    color: red !important;
+}
+
+/* === Estilos limpios para select2 en el chat === */
+.select2-container--default .select2-selection--single {
+    background: #003058 !important;
+    color: #fff !important;
+    border: none !important;
+    border-bottom: 1px solid #9e9e9e !important;
+    border-radius: 0 !important;
+    min-height: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fff !important;
+    line-height: 3rem !important;
+    padding-left: 0.5rem !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 3rem !important;
+    right: 0.5rem !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    display: none !important;
+}
+.select2-dropdown {
+    background: #003058 !important;
+    color: #fff !important;
+    z-index: 1200000 !important;
+}
+.select2-results__option {
+    color: #fff !important;
+    background: #003058 !important;
+    font-size: 1rem;
+}
+.select2-results__option--highlighted[aria-selected] {
+    background: #fff !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #bdbdbd !important;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border: none !important;
+    color: #9e9e9e !important;
+    font-weight: bold;
+}
+.select2-container--open .select2-dropdown--above, .select2-container--open .select2-dropdown--below {
+    border: none;
+    box-shadow: 0 1px 2px #000;
+    z-index: 1200000 !important;
+}
+
+/* Oculta el placeholder de select2 por defecto */
+.select2-selection__placeholder {
+  display: none !important;
+}
+
+/* Muestra el placeholder solo cuando el select2 está abierto */
+.select2-container--open .select2-selection__placeholder {
+  display: block !important;
+}

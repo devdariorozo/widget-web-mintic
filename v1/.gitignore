@@ -1,0 +1,11 @@
+# VARIABLES DE ENTORNO
+# .env
+
+# MODULOS - LIBRERIAS
+/node_modules
+
+# CARPETA UPLOADS
+/uploads/*
+!/uploads/.gitkeep
+
+
