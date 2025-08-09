@@ -22,7 +22,7 @@
 
 /* Estilos para mensaje de bienvenida */
 .bienvenidaChat {
-  font-family: 'Redounded LT Pro', sans-serif;
+  font-family: Nunito Sans Black;
 }
 
 
@@ -80,10 +80,10 @@
 #widgetChatBot .bar-chat {
   height: 70px;
   max-height: 70px;
-  background-color: #003058 ;
+  background-color: #0060dd ;
   display: flex;
   box-sizing: border-box;
-  font-family: 'Redounded LT Pro', sans-serif;
+  font-family: Nunito Sans Black;
   
 }
 
@@ -144,7 +144,7 @@
 #widgetChatBot .btn-chat-pau span {
   padding: .5rem;
   color: #41beee;
-  font-family: 'Redounded LT Pro', sans-serif;
+  font-family: Nunito Sans Black;
   font-weight: 700
 }
 

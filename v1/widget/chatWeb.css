@@ -50,10 +50,10 @@ html, body {
 #contenedorWidget .bar-chat {
   height: 4rem;
   max-height: 4rem;
-  background-color: #003058;
+  background-color: #fff;
   display: flex;
   box-sizing: border-box;
-  font-family: 'Redounded LT Pro', sans-serif;
+  font-family: Nunito Sans Black;
   position: relative;
   z-index: 1000 !important;
   padding: 0 0.2rem;
@@ -61,9 +61,9 @@ html, body {
 
 /* ! ESTILO PARA EL ÍCONO DE LA CAJA 1 DE LA BARRA DEL CHAT */
 #contenedorWidget .bar-img {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 0%;
   padding: 0.3rem;
 }
 
@@ -82,14 +82,14 @@ html, body {
 #contenedorWidget .btn-chat-pau span {
   padding: 0.5rem;
   color: #41beee;
-  font-family: 'Redounded LT Pro', sans-serif;
+  font-family: Nunito Sans Black;
   font-weight: 700;
   font-size: 1rem;
 }
 
 /* ! ESTILO PARA EL ÍCONO DEL BOTÓN DE TOGGLE DEL CHAT */
 #contenedorWidget .img-btn {
-  height: 9rem;
+  height: 4rem;
   margin-right: -1rem;
 }
 
@@ -330,7 +330,7 @@ html, body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  color: #FFFFFF;
+  color: #000;
   margin: 0;
   padding: 0;
 }
@@ -379,7 +379,7 @@ html, body {
 }
 
 #nombreChatWeb {
-  color: #FFFFFF;
+  color: #000;
   font-weight: bold;
   font-size: clamp(0.7rem, 3vw, 1.1rem);
   white-space: nowrap;
@@ -391,7 +391,7 @@ html, body {
 }
 
 #versionChatWeb {
-  color: #FFFFFF;
+  color: #000;
   font-size: clamp(0.55rem, 2vw, 0.6rem);
   font-weight: normal;
   white-space: nowrap;
@@ -405,7 +405,7 @@ html, body {
 
 /* ! ESTILO PARA EL ESTADO DEL CHAT (INCLUYENDO EL ÍCONO) */
 #estadoChatWeb {
-  color: #FFFFFF;
+  color: #000;
   font-size: .8rem;
   display: flex;
   align-items: center;

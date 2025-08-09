@@ -33,12 +33,12 @@ function inicializarWidgetChat() {
       <div id='contentChatWeb' class='cont-chat'>
         <div class='bar-chat'>
           <div class='bar-box bar-box1'>
-            <img class="bar-img" src='${APP_URL}/images/imagen-corporativa/logo_sistema_sm.png' alt='Logo de la aplicación'>
+            <img class="bar-img" src='${APP_URL}/images/imagen-corporativa/logo_sistema_sm.svg' alt='Logo de la aplicación'>
           </div>
           <div class='bar-box bar-box2'>
             <div class="tituloChatWeb">
-              <span id="nombreChatWeb">CHAT BOT IDC</span>
-              <span id="versionChatWeb">V 3.0.3</span>
+              <span id="nombreChatWeb">CHAT WEB MINTIC</span>
+              <span id="versionChatWeb">V 1.0.0</span>
             </div>
             <div id="estadoChatWeb">
               <i class="material-icons">brightness_1</i> Online
