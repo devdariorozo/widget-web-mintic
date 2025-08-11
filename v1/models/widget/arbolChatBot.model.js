@@ -84,8 +84,8 @@ const arbolChatBot = async (remitente, contenido) => {
                     ⚠️ <i>Por favor, seleccione una opción del 1 al 3.</i></p>`;
 
                     await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-                    // todo: Volver a Solicitar Opciones Iniciales Ayuda
-                    return await solicitarOpcionesInicialesAyuda(idChat, remitente);
+                    // todo: Volver a Solicitar Opciones Servicios
+                    return await solicitarOpcionesServicios(idChat, remitente);
                 }
             }
 
@@ -102,6 +102,11 @@ const arbolChatBot = async (remitente, contenido) => {
             if (arbolChat === 'Autorizacion Datos Personales' || arbolChat === 'Alerta No Entiendo - Autorizacion Datos Personales') {
                 // ! Se refiere a consumir el endpoint de interaccion AI Soul
                 return await procesarAutorizacionDatosPersonales(idChat, remitente, contenido);
+            }
+
+            // todo: Rol Usuario Arbol
+            if (arbolChat === 'Rol Usuario' || arbolChat === 'Alerta No Entiendo - Rol Usuario') {
+                return await procesarRolUsuario(idChat, remitente, contenido);
             }
 
             return true;
@@ -141,12 +146,12 @@ const clienteDesiste = async (idChat, remitente) => {
     }
 };
 
-// todo: Solicitar Opciones Iniciales Ayuda Arbol
-const solicitarOpcionesInicialesAyuda = async (idChat, remitente) => {
-    const solicitarOpcionesInicialesAyudaArbol = dataEstatica.arbol[0];
-    chatData.descripcion = 'Se solicita nuevamentelas opciones iniciales de ayuda.';
-    await modelChat.actualizar(idChat, solicitarOpcionesInicialesAyudaArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.opcionesInicialesAyuda, chatData.descripcion);
+// todo: Solicitar Opciones Servicios Arbol
+const solicitarOpcionesServicios = async (idChat, remitente) => {
+    const solicitarOpcionesServiciosArbol = dataEstatica.arbol[0];
+    chatData.descripcion = 'Se solicita nuevamentelas opciones de servicios.';
+    await modelChat.actualizar(idChat, solicitarOpcionesServiciosArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.opcionesServicios, chatData.descripcion);
 };
 
 // todo: Solicitar Autorizacion Datos Personales Arbol
@@ -163,7 +168,8 @@ const procesarAutorizacionDatosPersonales = async (idChat, remitente, contenido)
     contenido = contenido.charAt(0).toUpperCase() + contenido.slice(1).toLowerCase();
     console.log('contenido: ', contenido);
     if (contenido === 'Si') {
-        return await clienteDesiste(idChat, remitente);
+        // Solicitar rol usuario
+        return await solicitarRolUsuario(idChat, remitente);
     } else if (contenido === 'No') {
         return await clienteDesiste(idChat, remitente);
     } else {
@@ -175,6 +181,32 @@ const procesarAutorizacionDatosPersonales = async (idChat, remitente, contenido)
         // todo: Volver a Solicitar Autorizacion Datos Personales
         return await solicitarAutorizacionDatosPersonales(idChat, remitente);
     }
+};
+
+// todo: Solicitar Rol Usuario Arbol
+const solicitarRolUsuario = async (idChat, remitente) => {
+    const solicitarRolUsuarioArbol = dataEstatica.arbol[5];
+    chatData.descripcion = 'Se solicita el rol del usuario.';
+    await modelChat.actualizar(idChat, solicitarRolUsuarioArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.estadoMensaje[1], dataEstatica.tipoMensaje[0], dataEstatica.solicitarRolUsuario, chatData.descripcion);
+};
+
+// todo: Procesar Rol Usuario Arbol
+const procesarRolUsuario = async (idChat, remitente, contenido) => {
+    // Convertir la primera letra a mayúscula y el resto a minúscula
+    contenido = contenido.charAt(0).toUpperCase() + contenido.slice(1).toLowerCase();
+    console.log('contenido: ', contenido);
+    if (contenido === '1' || contenido === '2') {
+        return await clienteDesiste(idChat, remitente);
+    }
+
+    const pasoArbol = 'Alerta No Entiendo - Rol Usuario';
+    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
+    ⚠️ <i>Por favor, responda 1 o 2.</i></p>`;
+
+    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
+    // todo: Volver a Solicitar Rol Usuario
+    return await solicitarRolUsuario(idChat, remitente);
 };
 
 // // todo: Solicitar Condicion Adjuntos Arbol

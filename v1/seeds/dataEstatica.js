@@ -32,7 +32,7 @@ const arbol = [
     'Instrucciones',// 2
     'Inicio',// 3
     'Autorizacion Datos Personales',// 4
-    'Procesar Autorizacion Datos Personales',// 5
+    'Rol Usuario',// 5
     'Interaccion AI Soul',// 6
     'Error API',// 8
     'Cliente Desiste',// 9
@@ -63,8 +63,7 @@ const saludo = `<p class="saludoChat">
 
                     <b>1.</b> Soy una persona sorda y necesito ayuda<br/>
                     <b>2.</b> Deseo ayudar a una persona sorda<br/>
-                    <b>3.</b> Deseo conocer más sobre este servicio<br/>
-                </p>`;
+                    <b>3.</b> Deseo conocer más sobre este servicio</p>`;
 
 // TODO: MENSAJE DE DESPEDIDA
 const despedida = `<p class="despedidaChat">💙 ¡Gracias por contactarse con nosotros! <br/><br/>
@@ -75,15 +74,14 @@ const despedida = `<p class="despedidaChat">💙 ¡Gracias por contactarse con n
 const instrucciones = `<p class="instruccionesArbol">Hola,<br/><br/>
                         📝 <b>En el momento que desee volver a empezar, por favor escriba <b>inicio</b> o <b>INICIO</b> para regresar al menú principal🔄</b></p>`;
 
-// TODO: OPCIONES INICIALES AYUDA
-const opcionesInicialesAyuda = `<p class="opcionesInicialesAyudaArbol"><b>¿Cómo puedo ayudarle hoy?</b><br/><br/>
+// TODO: OPCIONES SERVICIOS
+const opcionesServicios = `<p class="opcionesServiciosArbol"><b>¿Cómo puedo ayudarle hoy?</b><br/><br/>
                     
                     Por favor, seleccione una opción:<br/><br/>
 
                     <b>1.</b> Soy una persona sorda y necesito ayuda<br/>
                     <b>2.</b> Deseo ayudar a una persona sorda<br/>
-                    <b>3.</b> Deseo conocer más sobre este servicio<br/>
-                </p>`;
+                    <b>3.</b> Deseo conocer más sobre este servicio</p>`;
 
 // TODO: MENSAJE SOLICITANDO AUTORIZACION DE DATOS PERSONALES
 const solicitarAutorizacionDatosPersonales = `  <p class="solicitarAutorizacionDatosPersonalesArbol">🛡️ <b>*Autorización de Tratamiento de Datos Personales*</b><br/><br/>
@@ -91,8 +89,95 @@ const solicitarAutorizacionDatosPersonales = `  <p class="solicitarAutorizacionD
 
                                                 <a href="https://google.com" target="_blank">¿Autoriza usted el tratamiento de sus datos personales?</a><br/><br/>
 
-                                                <b>Responda Si para continuar</b><br/>
-                                                <b>Responda No para finalizar</b></p>`;
+                                                <b>✅ Responda Si para continuar</b><br/>
+                                                <b>❌ Responda No para finalizar</b></p>`;
+
+// TODO: MENSAJE SOLICITANDO ROL USUARIO
+const solicitarRolUsuario = `  <p class="solicitarRolUsuarioArbol">🧑‍🦻 <b>¿Usted se identifica como…?</b><br/><br/>
+                                                
+                                                <b>1.</b> Persona con discapacidad auditiva<br/>
+                                                <b>2.</b> Persona que respresenta, ayuda o acompaña a una persona con discapacidad auditiva</p>`;
+
+// TODO: MENSAJE SOLICITANDO TIPO DE DOCUMENTO
+const solicitarTipoDocumento = `  <p class="solicitarTipoDocumentoArbol">📄 <b>¿Cuál es su tipo de documento?</b><br/><br/>
+                                                
+                                                Ejemplo: C.C, C.E., P., T.I.<br/><br/>
+
+                                                <b>C.C.</b> Cédula de ciudadanía<br/>
+                                                <b>C.E.</b> Cédula de extranjería<br/>
+                                                <b>P.</b> Pasaporte<br/>
+                                                <b>T.I.</b> Tarjeta de identidad</p>`;
+
+// TODO: MENSAJE SOLICITANDO NUMERO DE DOCUMENTO
+const solicitarNumeroDocumento = `  <p class="solicitarNumeroDocumentoArbol">🔢 <b>¿Cuál es su número de documento?</b><br/><br/>
+
+                                                Por favor, ingrese su número de documento.</p>`;
+
+// TODO: MENSAJE SOLICITANDO NOMBRE COMPLETO
+const solicitarNombreCompleto = `  <p class="solicitarNombreCompletoArbol">👤 <b>¿Cuál es su nombre completo?</b><br/><br/>
+
+                                                Por favor, ingrese su nombre completo.</p>`;
+
+// TODO: MENSAJE SOLICITANDO SEXO
+const solicitarSexo = `  <p class="solicitarSexoArbol">⚧️ <b>¿Cuál es su sexo?</b><br/><br/>
+
+                                                Por favor, ingrese su sexo.</p>`;
+
+// TODO: MENSAJE SOLICITANDO TELEFONO
+const solicitarTelefono = `  <p class="solicitarTelefonoArbol">📱 <b>¿Cuál es su número de teléfono?</b><br/><br/>
+
+                                                Por favor, ingrese su número de teléfono.</p>`;
+
+// TODO: MENSAJE SOLICITANDO CORREO ELECTRONICO
+const solicitarCorreoElectronico = `  <p class="solicitarCorreoElectronicoArbol">📧 <b>¿Cuál es su correo electrónico?</b><br/><br/>
+
+                                                Por favor, ingrese su correo electrónico.</p>`;
+
+// TODO: MENSAJE SOLICITANDO CIUDAD
+const solicitarCiudadMunicipio = `  <p class="solicitarCiudadMunicipioArbol">🏙️ <b>A continuación, le presentamos un resumen de los datos registrados:</b><br/><br/>
+
+                                                Por favor, ingrese su ciudad o municipio.</p>`;
+
+// TODO: MENSAJE CONFIRMAR DATOS INGRESADOS
+const confirmarDatosIngresados = `  <p class="confirmarDatosIngresadosArbol">📋 <b>¿Está seguro de que los datos ingresados son correctos?</b><br/><br/>
+
+                                                <b>Tipo de documento:</b> <br/>
+                                                <b>Número de documento:</b> <br/>
+                                                <b>Nombre completo:</b> <br/>
+                                                <b>Sexo:</b> <br/>
+                                                <b>Teléfono:</b> <br/>
+                                                <b>Correo electrónico:</b> <br/>
+                                                <b>Ciudad o municipio:</b> <br/><br/>
+                                                
+                                                <b>✅ Responda Sí para continuar</b> <br/>
+                                                <b>❌ Responda No si desea corregir algún dato</b></p>`;
+
+// TODO: MENSAJE SOLICITANDO CORREGIR ALGUNO DE LOS DATOS INGRESADOS
+const solicitarCorregirDatosIngresados = `  <p class="solicitarCorregirDatosIngresadosArbol">📝 <b>¿Desea corregir algún dato?</b> <br/><br/>
+
+                                                <b>1.</b> Tipo de documento<br/>
+                                                <b>2.</b> Número de documento<br/>
+                                                <b>3.</b> Nombre completo<br/>
+                                                <b>4.</b> Sexo<br/>
+                                                <b>5.</b> Teléfono<br/>
+                                                <b>6.</b> Correo electrónico<br/>
+                                                <b>7.</b> Ciudad o municipio</p>`;
+
+// TODO: MENSAJE SOLICITANDO CANAL DE ATENCION
+const solicitarCanalAtencion = `  <p class="solicitarCanalAtencionArbol">💬 <b>¿Cómo desea continuar con la atención?</b> <br/><br/>
+
+                                                <b>1.</b> Ser atendido por un agente humano a través del chat<br/>
+                                                <b>2.</b> Conectarse a una videollamada con intérprete en lengua de señas</p>`;
+
+// TODO: MENSAJE SOLICITANDO PASO AGENTE HUMANO
+const solicitarPasoAgenteHumano = `  <p class="solicitarPasoAgenteHumanoArbol">🔄 <b>Estamos transfiriendo su solicitud a uno de nuestros agentes</b> <br/><br/>
+
+                                                 Por favor, espere un momento mientras lo conectamos.</p>`;
+
+// TODO: MENSAJE SOLICITANDO VIDEOLLAMADA
+const solicitarVideoLlamada = `  <p class="solicitarVideoLlamadaArbol">🎥 <b>Estamos abriendo la videollamada de atención.</b> <br/><br/>
+
+                                                 Por favor, espere un momento mientras se establece la conexión con el intérprete en lengua de señas colombiana.</p>`;
 
 // TODO: MENSAJE SOLICITANDO CONDICION DE ADJUNTOS
 const condicionAdjuntos = `<p class="condicionAdjuntosArbol">📝 <b>Adjuntar documentos:</b> <br/><br/>
@@ -175,8 +260,21 @@ module.exports = {
     saludo,
     despedida,
     instrucciones,
-    opcionesInicialesAyuda,
+    opcionesServicios,
     solicitarAutorizacionDatosPersonales,
+    solicitarRolUsuario,
+    solicitarTipoDocumento,
+    solicitarNumeroDocumento,
+    solicitarNombreCompleto,
+    solicitarSexo,
+    solicitarTelefono,
+    solicitarCorreoElectronico,
+    solicitarCiudadMunicipio,
+    confirmarDatosIngresados,
+    solicitarCorregirDatosIngresados,
+    solicitarCanalAtencion,
+    solicitarPasoAgenteHumano,
+    solicitarVideoLlamada,
     condicionAdjuntos,
     confirmarAdjuntos,
     alertaNoEntiendo,
