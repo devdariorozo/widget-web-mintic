@@ -90,15 +90,16 @@ const filtrar = async (idChatWeb) => {
                 cht_control_api AS CONTROL_API,
                 cht_control_peticiones AS CONTROL_PETICIONES,
                 cht_resultado_api AS RESULTADO_API,
-                cht_nombres AS NOMBRES, 
-                cht_apellidos AS APELLIDOS,
-                cht_numero_cedula AS NUMERO_CEDULA,
-                cht_pais_residencia AS PAIS_RESIDENCIA,
-                cht_ciudad_residencia AS CIUDAD_RESIDENCIA,
-                cht_indicativo_pais AS INDICATIVO_PAIS,
-                cht_numero_celular AS NUMERO_CELULAR,
-                cht_correo_electronico AS CORREO_ELECTRONICO,
+                cht_servicio AS SERVICIO,
                 cht_autorizacion_datos_personales AS AUTORIZACION_DATOS_PERSONALES,
+                cht_tipo_documento AS TIPO_DOCUMENTO,
+                cht_numero_documento AS NUMERO_DOCUMENTO,
+                cht_nombre_completo AS NOMBRE_COMPLETO,
+                cht_sexo AS SEXO,
+                cht_contacto AS CONTACTO,
+                cht_correo AS CORREO,
+                cht_ciudad_municipio AS CIUDAD_MUNICIPIO,
+                cht_canal_atencion AS CANAL_ATENCION,
                 cht_adjuntos AS ADJUNTOS,
                 cht_ruta_adjuntos AS RUTA_ADJUNTOS,
                 cht_descripcion AS DESCRIPCION,
@@ -125,7 +126,7 @@ const filtrar = async (idChatWeb) => {
 };
 
 // * FORMULARIO INICIAL
-const formularioInicial = async (idChatWeb, pasoArbol, nombres, apellidos, numeroCedula, paisResidencia, ciudadResidencia, indicativoPais, numeroCelular, correoElectronico, autorizacionDatosPersonales, descripcion) => {
+const formularioInicial = async (idChatWeb, pasoArbol, servicio, autorizacionDatosPersonales, tipoDocumento, numeroDocumento, nombreCompleto, sexo, contacto, correo, ciudadMunicipio, canalAtencion, descripcion) => {
     try {
         // todo: Sentencia SQL
         const query = `
@@ -133,22 +134,23 @@ const formularioInicial = async (idChatWeb, pasoArbol, nombres, apellidos, numer
                 tbl_chat
             SET
                 cht_arbol = ?,
-                cht_nombres = ?,
-                cht_apellidos = ?,
-                cht_numero_cedula = ?,
-                cht_pais_residencia = ?,
-                cht_ciudad_residencia = ?,
-                cht_indicativo_pais = ?,
-                cht_numero_celular = ?,
-                cht_correo_electronico = ?,
+                cht_servicio = ?,
                 cht_autorizacion_datos_personales = ?,
+                cht_tipo_documento = ?,
+                cht_numero_documento = ?,
+                cht_nombre_completo = ?,
+                cht_sexo = ?,
+                cht_contacto = ?,
+                cht_correo = ?,
+                cht_ciudad_municipio = ?,
+                cht_canal_atencion = ?,
                 cht_descripcion = ?
             WHERE
                 cht_remitente = ?;
         `;
 
         // todo: Ejecutar la sentencia y retornar respuesta
-        const result = await pool.query(query, [pasoArbol, nombres, apellidos, numeroCedula, paisResidencia, ciudadResidencia, indicativoPais, numeroCelular, correoElectronico, autorizacionDatosPersonales, descripcion, idChatWeb]);
+        const result = await pool.query(query, [pasoArbol, servicio, autorizacionDatosPersonales, tipoDocumento, numeroDocumento, nombreCompleto, sexo, contacto, correo, ciudadMunicipio, canalAtencion, descripcion, idChatWeb]);
 
         // todo: Obtener el id del chat
         const queryIdChat = `
@@ -205,8 +207,8 @@ const error = async (descripcion, idChat) => {
                     cht_id AS ID_CHAT
                 FROM
                     tbl_chat
-                WHERE
-                    cht_id = ?;
+            WHERE
+                cht_id = ?;
             `;
             const [rows] = await pool.query(query, [idChat]);
             return rows;
@@ -248,15 +250,16 @@ const monitor = async (fechaInicial, fechaFinal, opcionControlApi, numeroLimite,
                 cht_control_api AS CONTROL_API,
                 cht_control_peticiones AS CONTROL_PETICIONES,
                 cht_resultado_api AS RESULTADO_API,
-                cht_nombres AS NOMBRES,
-                cht_apellidos AS APELLIDOS,
-                cht_numero_cedula AS NUMERO_CEDULA,
-                cht_pais_residencia AS PAIS_RESIDENCIA,
-                cht_ciudad_residencia AS CIUDAD_RESIDENCIA,
-                cht_indicativo_pais AS INDICATIVO_PAIS,
-                cht_numero_celular AS NUMERO_CELULAR,
-                cht_correo_electronico AS CORREO_ELECTRONICO,
+                cht_servicio AS SERVICIO,
                 cht_autorizacion_datos_personales AS AUTORIZACION_DATOS_PERSONALES,
+                cht_tipo_documento AS TIPO_DOCUMENTO,
+                cht_numero_documento AS NUMERO_DOCUMENTO,
+                cht_nombre_completo AS NOMBRE_COMPLETO,
+                cht_sexo AS SEXO,
+                cht_contacto AS CONTACTO,
+                cht_correo AS CORREO,
+                cht_ciudad_municipio AS CIUDAD_MUNICIPIO,
+                cht_canal_atencion AS CANAL_ATENCION,
                 cht_adjuntos AS ADJUNTOS,
                 cht_ruta_adjuntos AS RUTA_ADJUNTOS,
                 cht_descripcion AS DESCRIPCION,
@@ -358,15 +361,16 @@ const actualizar = async (idChat, pasoArbol, chatData) => {
                 cht_control_api = ?,
                 cht_control_peticiones = ?,
                 cht_resultado_api = ?,
-                cht_nombres = ?,
-                cht_apellidos = ?,
-                cht_numero_cedula = ?,
-                cht_pais_residencia = ?,
-                cht_ciudad_residencia = ?,
-                cht_indicativo_pais = ?,
-                cht_numero_celular = ?,
-                cht_correo_electronico = ?,
+                cht_servicio = ?,
                 cht_autorizacion_datos_personales = ?,
+                cht_tipo_documento = ?,
+                cht_numero_documento = ?,
+                cht_nombre_completo = ?,
+                cht_sexo = ?,
+                cht_contacto = ?,
+                cht_correo = ?,
+                cht_ciudad_municipio = ?,
+                cht_canal_atencion = ?,
                 cht_adjuntos = ?,
                 cht_ruta_adjuntos = ?,
                 cht_descripcion = ?,
@@ -382,15 +386,16 @@ const actualizar = async (idChat, pasoArbol, chatData) => {
             chatData.controlApi,
             chatData.controlPeticiones,
             chatData.resultadoApi,
-            chatData.nombres,
-            chatData.apellidos,
-            chatData.numeroCedula,
-            chatData.paisResidencia,
-            chatData.ciudadResidencia,
-            chatData.indicativoPais,
-            chatData.numeroCelular,
-            chatData.correoElectronico,
+            chatData.servicio,
             chatData.autorizacionDatosPersonales,
+            chatData.tipoDocumento,
+            chatData.numeroDocumento,
+            chatData.nombreCompleto,
+            chatData.sexo,
+            chatData.contacto,
+            chatData.correo,
+            chatData.ciudadMunicipio,
+            chatData.canalAtencion,
             chatData.adjuntos,
             chatData.rutaAdjuntos,
             chatData.descripcion,
@@ -438,8 +443,8 @@ const cerrar = async (remitente, estadoChat, estadoGestion, arbol, controlApi, d
                     cht_id AS ID_CHAT
                 FROM
                     tbl_chat
-                WHERE
-                    cht_remitente = ?;
+            WHERE
+                cht_remitente = ?;
             `;
             const [rows] = await pool.query(query, [remitente]);
             return rows;
@@ -478,10 +483,8 @@ const cerrarChatAI = async (remitente, estadoChat, estadoGestion, arbol, control
             const query = `
                 SELECT
                     cht_id AS ID_CHAT
-                FROM
-                    tbl_chat
-                WHERE
-                    cht_remitente = ?;
+            WHERE
+                cht_remitente = ?;
             `;
             const [rows] = await pool.query(query, [remitente]);
             return rows;

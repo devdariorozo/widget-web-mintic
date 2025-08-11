@@ -8,47 +8,59 @@
 
 // ! VALORES ESTATICOS
 // * TIPO DE GESTION
-const tipoGestion = [
-    'Inbound',
-    'Outbound'
-];
+const tipoGestion = {
+    inbound: 'Inbound',
+    outbound: 'Outbound'
+};
 
 // * ESTADO DE CHAT
-const estadoChat = [
-    'Recibido',
-    'Enviado'
-];
+const estadoChat = {
+    recibido: 'Recibido',
+    enviado: 'Enviado'
+};
 
 // * ESTADO DE GESTION
-const estadoGestion = [
-    'Abierto',
-    'Cerrado'
-];
+const estadoGestion = {
+    abierto: 'Abierto',
+    cerrado: 'Cerrado'
+};
 
 // * ARBOL
-const arbol = [
-    'Saludo',// 0
-    'Despedida',// 1
-    'Instrucciones',// 2
-    'Inicio',// 3
-    'Autorizacion Datos Personales',// 4
-    'Rol Usuario',// 5
-    'Interaccion AI Soul',// 6
-    'Error API',// 8
-    'Cliente Desiste',// 9
-    'Alerta Inactividad',// 10
-    'Cerrado Por Inactividad',// 11
-    'Condicion Adjuntos',// 12
-    'Confirmar Adjuntos',// 13    
-];
+const arbol = {
+    saludo: 'Saludo',
+    despedida: 'Despedida',
+    instrucciones: 'Instrucciones',
+    inicio: 'Inicio',
+    opcionesServicios: 'Opciones Servicios',
+    autorizacionDatosPersonales: 'Autorizacion Datos Personales',
+    rolUsuario: 'Rol Usuario',
+    solicitarTipoDocumento: 'Solicitar Tipo Documento',
+    solicitarNumeroDocumento: 'Solicitar Numero Documento',
+    solicitarNombreCompleto: 'Solicitar Nombre Completo',
+    solicitarSexo: 'Solicitar Sexo',
+    solicitarTelefono: 'Solicitar Telefono',
+    solicitarCorreoElectronico: 'Solicitar Correo Electronico',
+    solicitarCiudadMunicipio: 'Solicitar Ciudad Municipio',
+    confirmarDatosIngresados: 'Confirmar Datos Ingresados',
+    corregirDatosIngresados: 'Corregir Datos Ingresados',
+    solicitarCanalAtencion: 'Solicitar Canal Atencion',
+    solicitarPasoAgenteHumano: 'Solicitar Paso Agente Humano',
+    solicitarVideoLlamada: 'Solicitar Video Llamada',
+    condicionAdjuntos: 'Condicion Adjuntos',
+    confirmarAdjuntos: 'Confirmar Adjuntos',
+    errorApi: 'Error API',
+    clienteDesiste: 'Cliente Desiste',
+    alertaInactividad: 'Alerta Inactividad',
+    cerradoPorInactividad: 'Cerrado Por Inactividad'
+};
 
 // * CONTROL DE ARBOL
-const controlApi = [
-    'Success',// 0
-    'Error',// 1
-    'Warning',// 2
-    'Info',// 3
-];
+const controlApi = {
+    success: 'Success',
+    error: 'Error',
+    warning: 'Warning',
+    info: 'Info'
+};
 
 // * MENSAJES
 // TODO: MENSAJE DE SALUDO
@@ -56,14 +68,7 @@ const saludo = `<p class="saludoChat">
                     👋 ¡Bienvenido(a)! Le saluda el Asistente Virtual del Ministerio TIC.<br/>
                     Este es un servicio de apoyo para personas con discapacidad auditiva o personas que desean ayudarles.<br/>
                     Estamos aquí para orientarle y facilitar su comunicación con otras personas o entidades.<br/>
-                    Este servicio es completamente gratuito y confidencial.<br/><br/>
-                    
-                    <b>¿Cómo puedo ayudarle hoy?</b><br/>
-                    Por favor, seleccione una opción:<br/><br/>
-
-                    <b>1.</b> Soy una persona sorda y necesito ayuda<br/>
-                    <b>2.</b> Deseo ayudar a una persona sorda<br/>
-                    <b>3.</b> Deseo conocer más sobre este servicio</p>`;
+                    Este servicio es completamente gratuito y confidencial.</p>`;
 
 // TODO: MENSAJE DE DESPEDIDA
 const despedida = `<p class="despedidaChat">💙 ¡Gracias por contactarse con nosotros! <br/><br/>
@@ -75,8 +80,8 @@ const instrucciones = `<p class="instruccionesArbol">Hola,<br/><br/>
                         📝 <b>En el momento que desee volver a empezar, por favor escriba <b>inicio</b> o <b>INICIO</b> para regresar al menú principal🔄</b></p>`;
 
 // TODO: OPCIONES SERVICIOS
-const opcionesServicios = `<p class="opcionesServiciosArbol"><b>¿Cómo puedo ayudarle hoy?</b><br/><br/>
-                    
+const opcionesServicios = `<p class="opcionesServiciosArbol"> <b>¿Cómo podemos ayudarle hoy?</b><br/><br/>
+
                     Por favor, seleccione una opción:<br/><br/>
 
                     <b>1.</b> Soy una persona sorda y necesito ayuda<br/>
@@ -101,12 +106,14 @@ const solicitarRolUsuario = `  <p class="solicitarRolUsuarioArbol">🧑‍🦻 <
 // TODO: MENSAJE SOLICITANDO TIPO DE DOCUMENTO
 const solicitarTipoDocumento = `  <p class="solicitarTipoDocumentoArbol">📄 <b>¿Cuál es su tipo de documento?</b><br/><br/>
                                                 
-                                                Ejemplo: C.C, C.E., P., T.I.<br/><br/>
+                                                Por favor, seleccione una opción:<br/><br/>
 
-                                                <b>C.C.</b> Cédula de ciudadanía<br/>
-                                                <b>C.E.</b> Cédula de extranjería<br/>
-                                                <b>P.</b> Pasaporte<br/>
-                                                <b>T.I.</b> Tarjeta de identidad</p>`;
+                                                <b>1.</b> C.C (Cédula de ciudadanía)<br/>
+                                                <b>2.</b> C.E (Cédula de extranjería)<br/>
+                                                <b>3.</b> P (Pasaporte)<br/>
+                                                <b>4.</b> T.I (Tarjeta de identidad)<br/><br/>
+                                                
+                                                <i>O escriba directamente: C.C, C.E, P, T.I</i></p>`;
 
 // TODO: MENSAJE SOLICITANDO NUMERO DE DOCUMENTO
 const solicitarNumeroDocumento = `  <p class="solicitarNumeroDocumentoArbol">🔢 <b>¿Cuál es su número de documento?</b><br/><br/>
@@ -121,7 +128,12 @@ const solicitarNombreCompleto = `  <p class="solicitarNombreCompletoArbol">👤 
 // TODO: MENSAJE SOLICITANDO SEXO
 const solicitarSexo = `  <p class="solicitarSexoArbol">⚧️ <b>¿Cuál es su sexo?</b><br/><br/>
 
-                                                Por favor, ingrese su sexo.</p>`;
+                                                Por favor, seleccione una opción:<br/><br/>
+
+                                                <b>1.</b> Masculino<br/>
+                                                <b>2.</b> Femenino<br/><br/>
+                                                
+                                                <i>O escriba directamente: Masculino, Femenino</i></p>`;
 
 // TODO: MENSAJE SOLICITANDO TELEFONO
 const solicitarTelefono = `  <p class="solicitarTelefonoArbol">📱 <b>¿Cuál es su número de teléfono?</b><br/><br/>
@@ -134,12 +146,12 @@ const solicitarCorreoElectronico = `  <p class="solicitarCorreoElectronicoArbol"
                                                 Por favor, ingrese su correo electrónico.</p>`;
 
 // TODO: MENSAJE SOLICITANDO CIUDAD
-const solicitarCiudadMunicipio = `  <p class="solicitarCiudadMunicipioArbol">🏙️ <b>A continuación, le presentamos un resumen de los datos registrados:</b><br/><br/>
+const solicitarCiudadMunicipio = `  <p class="solicitarCiudadMunicipioArbol">🏙️ <b>¿En qué ciudad o municipio se encuentra?</b><br/><br/>
 
                                                 Por favor, ingrese su ciudad o municipio.</p>`;
 
 // TODO: MENSAJE CONFIRMAR DATOS INGRESADOS
-const confirmarDatosIngresados = `  <p class="confirmarDatosIngresadosArbol">📋 <b>¿Está seguro de que los datos ingresados son correctos?</b><br/><br/>
+const confirmarDatosIngresados = `  <p class="confirmarDatosIngresadosArbol">📋 <b>A continuación, le presentamos un resumen de los datos registrados:</b><br/><br/>
 
                                                 <b>Tipo de documento:</b> <br/>
                                                 <b>Número de documento:</b> <br/>
@@ -193,10 +205,6 @@ const confirmarAdjuntos = `<p class="confirmarAdjuntosArbol">📝 <b>Por favor, 
 // TODO: MENSAJE DE ALERTA DE NO ENTIENDO
 const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
                             ⚠️ <i>Por favor, asegúrese de seguir las instrucciones y proporcione una respuesta válida.</i></p>`;
-// // TODO: MENSAJE DE ALERTA DE NO ENTIENDO
-// const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-//                             ⚠️ <i>Por favor, asegúrese de seguir las instrucciones y proporcione una respuesta válida.</i><br/><br/>
-//                             ⚠️ <i>En el momento que desee volver, por favor escriba <b>inicio</b> o <b>INICIO</b> para volver a empezar 🔄.</i></p>`;
 
 // TODO: MENSAJE DE ALERTA DE ERROR API
 const alertaErrorAPI = `<p class="alertaErrorAPIArbol">⏳ <b>Estamos experimentando una incidencia técnica.</b><br/><br/>
@@ -216,75 +224,82 @@ const chatDiferenteAbierto = `<p class="chatDiferenteAbiertoArbol">⚠️ <b>Est
                             📞 <i>Para continuar la comunicación, por favor, inicie un nuevo chat o contáctenos a través de nuestros canales oficiales.<br/><br/>
                             Agradecemos su comprensión, estamos aquí para ayudarle.</i></p>`;
 
-
-
 // * ESTADO DE MENSAJE
-const estadoMensaje = [
-    'Recibido',
-    'Enviado'
-];
+const estadoMensaje = {
+    recibido: 'Recibido',
+    enviado: 'Enviado'
+};
 
 // * TIPO DE MENSAJE
-const tipoMensaje = [
-    'Texto', // 0
-    'Adjuntos', // 1
-    'Multimedia', // 2
-    'Inactividad', // 3
-    'Fin Chat', // 4
-    'Error API', // 5
-    'Formulario' // 6
-];
+const tipoMensaje = {
+    texto: 'Texto',
+    adjuntos: 'Adjuntos',
+    multimedia: 'Multimedia',
+    inactividad: 'Inactividad',
+    finChat: 'Fin Chat',
+    errorApi: 'Error API',
+    formulario: 'Formulario'
+};
 
 // * LECTURA MENSAJE
-const lecturaMensaje = [
-    'No leido',
-    'Leido'
-];
+const lecturaMensaje = {
+    noLeido: 'No leido',
+    leido: 'Leido'
+};
 
 // * ESTADO REGISTRO
-const estadoRegistro = [
-    'Activo',
-    'Inactivo'
-];
+const estadoRegistro = {
+    activo: 'Activo',
+    inactivo: 'Inactivo'
+};
 
 // * RESPONSABLE
 const responsable = 'Chat Web Ministerio TIC';
 
-// ! EXPORTACIONES
+// ! EXPORTACIONES ORGANIZADAS POR CATEGORÍAS
 module.exports = {
-    tipoGestion,
-    estadoChat,
-    estadoGestion,
+    // * CONFIGURACIONES DEL SISTEMA
+    configuracion: {
+        tipoGestion,
+        estadoChat,
+        estadoGestion,
+        controlApi,
+        estadoMensaje,
+        tipoMensaje,
+        lecturaMensaje,
+        estadoRegistro,
+        responsable
+    },
+
+    // * ESTRUCTURA DEL ARBOL DE NAVEGACION
     arbol,
-    controlApi,
-    saludo,
-    despedida,
-    instrucciones,
-    opcionesServicios,
-    solicitarAutorizacionDatosPersonales,
-    solicitarRolUsuario,
-    solicitarTipoDocumento,
-    solicitarNumeroDocumento,
-    solicitarNombreCompleto,
-    solicitarSexo,
-    solicitarTelefono,
-    solicitarCorreoElectronico,
-    solicitarCiudadMunicipio,
-    confirmarDatosIngresados,
-    solicitarCorregirDatosIngresados,
-    solicitarCanalAtencion,
-    solicitarPasoAgenteHumano,
-    solicitarVideoLlamada,
-    condicionAdjuntos,
-    confirmarAdjuntos,
-    alertaNoEntiendo,
-    alertaErrorAPI,
-    clienteDesiste,
-    novedadIncidenciaTecnica,
-    chatDiferenteAbierto,
-    tipoMensaje,
-    estadoMensaje,
-    lecturaMensaje,
-    estadoRegistro,
-    responsable,
+
+    // * MENSAJES DEL SISTEMA
+    mensajes: {
+        saludo,
+        despedida,
+        instrucciones,
+        opcionesServicios,
+        solicitarAutorizacionDatosPersonales,
+        solicitarRolUsuario,
+        solicitarTipoDocumento,
+        solicitarNumeroDocumento,
+        solicitarNombreCompleto,
+        solicitarSexo,
+        solicitarTelefono,
+        solicitarCorreoElectronico,
+        solicitarCiudadMunicipio,
+        confirmarDatosIngresados,
+        solicitarCorregirDatosIngresados,
+        solicitarCanalAtencion,
+        solicitarPasoAgenteHumano,
+        solicitarVideoLlamada,
+        condicionAdjuntos,
+        confirmarAdjuntos,
+        alertaNoEntiendo,
+        alertaErrorAPI,
+        clienteDesiste,
+        novedadIncidenciaTecnica,
+        chatDiferenteAbierto
+    }
 };

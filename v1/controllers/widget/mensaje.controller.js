@@ -44,14 +44,14 @@ const crear = async (req, res) => {
             // todo: Preparamos los datos por defecto
             let idChat = verificarChat[0].ID_CHAT;
             let remitente = idChatWeb;
-            let estadoMensaje = dataEstatica.estadoMensaje[0];
-            let tipoMensaje = dataEstatica.tipoMensaje[0];
+            let estadoMensaje = dataEstatica.configuracion.estadoMensaje.recibido;
+            let tipoMensaje = dataEstatica.configuracion.tipoMensaje.texto;
             let contenido = mensaje;
             let enlaces = '-';
-            let lectura = dataEstatica.lecturaMensaje[0];
+            let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
             let descripcion = 'Se crea el mensaje con éxito.';
-            let estadoRegistro = dataEstatica.estadoRegistro[0];
-            let responsable = dataEstatica.responsable;
+            let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+            let responsable = dataEstatica.configuracion.responsable;
 
             // todo: Crear el registro
             const result = await model.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
@@ -173,7 +173,7 @@ const listarNoLeido = async (req, res) => {
         } = req.query;
 
         // todo: Valores por defecto
-        let lectura = dataEstatica.lecturaMensaje[0];
+        let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
 
         // todo: Listar los mensajes
         const result = await model.listarNoLeido(idChatWeb, lectura);
@@ -220,7 +220,7 @@ const leer = async (req, res) => {
         } = req.body;
 
         // todo: Valores por defecto
-        let lectura = dataEstatica.lecturaMensaje[1];
+        let lectura = dataEstatica.configuracion.lecturaMensaje.leido;
 
         // todo: Leer el mensaje
         const result = await model.leer(idMensaje, lectura);
@@ -294,8 +294,8 @@ const adjuntarArchivos = async (req, res) => {
         if (verificarChat.length > 0) {
             const idChat = verificarChat[0].ID_CHAT;
             const remitente = idChatWeb;
-            const estadoMensaje = dataEstatica.estadoMensaje[0]; // No leído
-            const tipoMensaje = dataEstatica.tipoMensaje[1]; // Adjuntos
+            const estadoMensaje = dataEstatica.configuracion.estadoMensaje.recibido; // No leído
+            const tipoMensaje = dataEstatica.configuracion.tipoMensaje.adjuntos; // Adjuntos
 
             // Crear carpeta para el chat si no existe
             const chatDir = path.join(__dirname, '../../uploads', idChatWeb);
@@ -317,10 +317,10 @@ const adjuntarArchivos = async (req, res) => {
             // Concatenar enlaces
             const enlaces = enlacesExistentes ? `${enlacesExistentes}|${nuevosEnlaces}` : nuevosEnlaces;
 
-            const lectura = dataEstatica.lecturaMensaje[0];
+            const lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
             const descripcion = 'Archivos adjuntos subidos con éxito.';
-            const estadoRegistro = dataEstatica.estadoRegistro[0];
-            const responsable = dataEstatica.responsable;
+            const estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+            const responsable = dataEstatica.configuracion.responsable;
 
             // Crear el registro en tbl_mensaje
             const result = await model.crear(idChat, remitente, estadoMensaje, tipoMensaje, mensaje, enlaces, lectura, descripcion, estadoRegistro, responsable);
@@ -453,19 +453,19 @@ const vigilaInactividadChat = async (req, res) => {
                     await modelArbolChatBot.crearMensajeCierreInactividad(idChatWeb);
                     await modelChat.cerrar(
                         idChatWeb,
-                        dataEstatica.estadoChat[0],
-                        dataEstatica.estadoGestion[1],
-                        dataEstatica.arbol[11],
-                        dataEstatica.controlApi[0],
+                        dataEstatica.configuracion.estadoChat.recibido,
+                        dataEstatica.configuracion.estadoGestion.cerrado,
+                        dataEstatica.arbol.cerradoPorInactividad,
+                        dataEstatica.configuracion.controlApi.success,
                         'Chat cerrado por inactividad.',
-                        dataEstatica.estadoRegistro[0],
-                        dataEstatica.responsable
+                        dataEstatica.configuracion.estadoRegistro.activo,
+                        dataEstatica.configuracion.responsable
                     );
                 }
             }
         }
 
-        const mensajesNoLeidos = await model.listarNoLeido(idChatWeb, dataEstatica.lecturaMensaje[0]);
+        const mensajesNoLeidos = await model.listarNoLeido(idChatWeb, dataEstatica.configuracion.lecturaMensaje.noLeido);
 
         res.json({
             status: 200,

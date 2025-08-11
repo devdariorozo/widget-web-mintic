@@ -36,17 +36,17 @@ const crear = async (req, res) => {
         } = req.body;
 
         // todo: Preparamos los datos por defecto
-        let tipoGestion = dataEstatica.tipoGestion[0];
+        let tipoGestion = dataEstatica.configuracion.tipoGestion.inbound;
         let remitente = idChatWeb;
-        let estadoChat = dataEstatica.estadoChat[0];
-        let estadoGestion = dataEstatica.estadoGestion[0];
-        let arbol = dataEstatica.arbol[0];
-        let controlApi = dataEstatica.controlApi[0];
+        let estadoChat = dataEstatica.configuracion.estadoChat.recibido;
+        let estadoGestion = dataEstatica.configuracion.estadoGestion.abierto;
+        let arbol = dataEstatica.arbol.saludo;
+        let controlApi = dataEstatica.configuracion.controlApi.success;
         let controlPeticiones = 0;
         let resultadoApi = '-';
         let descripcion = 'Se crea el chat con éxito.';
-        let estadoRegistro = dataEstatica.estadoRegistro[0];
-        let responsable = dataEstatica.responsable;
+        let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+        let responsable = dataEstatica.configuracion.responsable;
 
         // todo: Validar si el chat existe
         const verificarDuplicado = await model.verificarDuplicado(remitente, estadoGestion, estadoRegistro);
@@ -65,24 +65,31 @@ const crear = async (req, res) => {
         if (result) {
             // todo: Crear el mensaje de bienvenida
             let idChat = result[0].insertId;
-            let estadoMensaje = dataEstatica.estadoMensaje[1];
-            let tipoMensaje = dataEstatica.tipoMensaje[0];
-            let contenido = dataEstatica.saludo;
+            let estadoMensaje = dataEstatica.configuracion.estadoMensaje.enviado;
+            let tipoMensaje = dataEstatica.configuracion.tipoMensaje.texto;
+            let contenido = dataEstatica.mensajes.saludo;
             let enlaces = '-';
-            let lectura = dataEstatica.lecturaMensaje[0];
+            let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
             let descripcion = 'Se crea el mensaje de bienvenida.';
-            let estadoRegistro = dataEstatica.estadoRegistro[0];
-            let responsable = dataEstatica.responsable;
+            let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+            let responsable = dataEstatica.configuracion.responsable;
             const resultMensajeBienvenida = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
 
             if (resultMensajeBienvenida) {
-                // todo: Enviar respuesta
-                res.json({
-                    status: 200,
-                    type: 'success',
-                    title: 'Chat Web MinTic',
-                    message: 'El chat se ha creado correctamente en el sistema.',
-                });
+                // todo: Crear el mensaje de opciones de servicios
+                let contenidoOpciones = dataEstatica.mensajes.opcionesServicios;
+                let descripcionOpciones = 'Se crea el mensaje de opciones de servicios.';
+                const resultMensajeOpciones = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenidoOpciones, enlaces, lectura, descripcionOpciones, estadoRegistro, responsable);
+
+                if (resultMensajeOpciones) {
+                    // todo: Enviar respuesta
+                    res.json({
+                        status: 200,
+                        type: 'success',
+                        title: 'Chat Web MinTic',
+                        message: 'El chat se ha creado correctamente en el sistema.',
+                    });
+                }
             }
         }
     } catch (error) {
@@ -118,7 +125,7 @@ const formularioInicial = async (req, res) => {
         } = req.body;
 
         // todo: Preparamos los datos
-        let pasoArbol = dataEstatica.arbol[5];
+        let pasoArbol = dataEstatica.arbol.rolUsuario;
         let nombres = camposFormulario.nombres;
         let apellidos = camposFormulario.apellidos;
         let numeroCedula = camposFormulario.numeroCedula;
@@ -138,8 +145,8 @@ const formularioInicial = async (req, res) => {
             // todo: Crear el mensaje de formulario inicial diligenciado
             const idChat = result[0].ID_CHAT;
             let remitente = idChatWeb;
-            let estadoMensaje = dataEstatica.estadoMensaje[0];
-            let tipoMensaje = dataEstatica.tipoMensaje[0];
+            let estadoMensaje = dataEstatica.configuracion.estadoMensaje.recibido;
+            let tipoMensaje = dataEstatica.configuracion.tipoMensaje.texto;
             let contenido = `
             <p class="datos-diligenciados">📝 <strong class="label-fuerte">Datos diligenciados:</strong><br/><br/>
                 <strong class="label-fuerte">Nombres:</strong> ${camposFormulario.nombres}<br/>
@@ -155,16 +162,16 @@ const formularioInicial = async (req, res) => {
           `;
 
             let enlaces = '-';
-            let lectura = dataEstatica.lecturaMensaje[0];
-            let estadoRegistro = dataEstatica.estadoRegistro[0];
-            let responsable = dataEstatica.responsable;
+            let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
+            let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+            let responsable = dataEstatica.configuracion.responsable;
             const resultMensajeFormularioInicialDiligenciado = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
 
             if (resultMensajeFormularioInicialDiligenciado) {
                 // todo: Crear el mensaje de saludo al usuario
                 let remitente = idChatWeb;
-                let estadoMensaje = dataEstatica.estadoMensaje[1];
-                let tipoMensaje = dataEstatica.tipoMensaje[0];
+                let estadoMensaje = dataEstatica.configuracion.estadoMensaje.enviado;
+                let tipoMensaje = dataEstatica.configuracion.tipoMensaje.texto;
                 let contenido = `
                     <p class="saludoUsuario">🤝 <b> Hola, ${camposFormulario.nombres} ${camposFormulario.apellidos}</b><br/><br/>
                         <i>¿En que puedo ayudarlo?</i><br/><br/>
@@ -172,15 +179,15 @@ const formularioInicial = async (req, res) => {
                     </p>
                 `;
                 let enlaces = '-';
-                let lectura = dataEstatica.lecturaMensaje[0];
-                let estadoRegistro = dataEstatica.estadoRegistro[0];
-                let responsable = dataEstatica.responsable;
+                let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
+                let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+                let responsable = dataEstatica.configuracion.responsable;
                 const resultMensajeSaludoUsuario = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
 
                 if (resultMensajeSaludoUsuario) {
                     // todo: Vamos a actualizar el chat dando paso a la IA
                     // todo: Preparamos los datos
-                    pasoArbol = dataEstatica.arbol[6];
+                    pasoArbol = dataEstatica.arbol.interaccionAiSoul1;
                     descripcion = 'Se brinda paso AI Soul';
 
                     // todo: Crear el mensaje de formulario inicial
@@ -410,13 +417,13 @@ const cerrar = async (req, res) => {
 
         // todo: Preparamos los datos por defecto
         let remitente = idChatWeb;
-        let estadoChat = dataEstatica.estadoChat[0];
-        let estadoGestion = dataEstatica.estadoGestion[1];
-        let arbol = dataEstatica.arbol[1];
-        let controlApi = dataEstatica.controlApi[0];
+        let estadoChat = dataEstatica.configuracion.estadoChat.recibido;
+        let estadoGestion = dataEstatica.configuracion.estadoGestion.cerrado;
+        let arbol = dataEstatica.arbol.despedida;
+        let controlApi = dataEstatica.configuracion.controlApi.success;
         let descripcion = 'Se cierra el chat directamente por parte del usuario.';
-        let estadoRegistro = dataEstatica.estadoRegistro[0];
-        let responsable = dataEstatica.responsable;
+        let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+        let responsable = dataEstatica.configuracion.responsable;
 
         // todo: Cerrar el chat
         const result = await model.cerrar(remitente, estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable);
@@ -426,14 +433,14 @@ const cerrar = async (req, res) => {
 
             // todo: Crear el mensaje de despedida
             let idChat = result[0].ID_CHAT;
-            let estadoMensaje = dataEstatica.estadoMensaje[1];
-            let tipoMensaje = dataEstatica.tipoMensaje[4];
-            let contenido = dataEstatica.despedida;
+            let estadoMensaje = dataEstatica.configuracion.estadoMensaje.enviado;
+            let tipoMensaje = dataEstatica.configuracion.tipoMensaje.finChat;
+            let contenido = dataEstatica.mensajes.despedida;
             let enlaces = '-';
-            let lectura = dataEstatica.lecturaMensaje[0];
+            let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
             let descripcion = 'Se crea el mensaje de despedida.';
-            let estadoRegistro = dataEstatica.estadoRegistro[0];
-            let responsable = dataEstatica.responsable;
+            let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+            let responsable = dataEstatica.configuracion.responsable;
             const resultMensajeDespedida = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
 
             if (resultMensajeDespedida) {
@@ -492,14 +499,14 @@ const cerrarChatAI = async (req, res) => {
         if (result) {
 
             // todo: Crear el mensaje de despedida
-            let estadoMensaje = dataEstatica.estadoMensaje[1];
-            let tipoMensaje = dataEstatica.tipoMensaje[4];
-            let contenido = dataEstatica.despedida;
+            let estadoMensaje = dataEstatica.configuracion.estadoMensaje.enviado;
+            let tipoMensaje = dataEstatica.configuracion.tipoMensaje.finChat;
+            let contenido = dataEstatica.mensajes.despedida;
             let enlaces = '-';
-            let lectura = dataEstatica.lecturaMensaje[0];
+            let lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
             let descripcion = 'Se crea el mensaje de despedida.';
-            let estadoRegistro = dataEstatica.estadoRegistro[0];
-            let responsable = dataEstatica.responsable;
+            let estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+            let responsable = dataEstatica.configuracion.responsable;
             const resultMensajeDespedida = await modelMensaje.crear(idChat, remitente, estadoMensaje, tipoMensaje, contenido, enlaces, lectura, descripcion, estadoRegistro, responsable);
 
             if (resultMensajeDespedida) {
