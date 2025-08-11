@@ -45,8 +45,8 @@ html, body {
 /* Estilo para el mensaje recibido */
 .mensaje-recibido {
     position: relative;
-    background-color: #DADADA; /* Color de fondo */
-    color: #000; /* Color del texto */
+    background-color: #0060dd; /* Color de fondo */
+    color: #fff; /* Color del texto */
     border-radius: 10px; /* Bordes redondeados */
     padding: 0.7rem 1.2rem;
     margin: 0.3rem 0 1rem 0; /* Solo margen inferior */
@@ -55,13 +55,13 @@ html, body {
     display: block; /* Cambiar a block */
     align-self: flex-end; /* Alinear a la derecha */
     position: relative; /* Para el pseudo-elemento */    
-    font-family: 'Redounded LT Pro', 
-    sans-serif;word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    font-family: 'Nunito Sans Black';
+    word-wrap: break-word; /* Permite que las palabras largas se dividan */
     overflow-wrap: break-word; /* Asegura que el texto se ajuste al contenedor */
     white-space: normal; /* Mantiene los saltos de línea y ajusta el texto */
 }
 .label-fuerte {
-    font-family: 'Arial Black', sans-serif;
+    font-family: 'Nunito Sans Black';
     color: black;
   }
   
@@ -73,14 +73,14 @@ html, body {
     right: 10px; /* Ajustar la posición */
     border-width: 10px;
     border-style: solid;
-    border-color: #DADADA transparent transparent transparent; /* Triángulo invertido */
+    border-color: #0060dd transparent transparent transparent; /* Triángulo invertido */
 }
 
 /* Estilo para el mensaje enviado */
 .mensaje-enviado {
     position: relative;
-    background-color: #1000cc ; /* Color de fondo */
-    color: #FFFFFF; /* Color del texto */
+    background-color: #E8E8E8 ; /* Color de fondo */
+    color: #000; /* Color del texto */
     border-radius: 10px; /* Bordes redondeados */
     padding: 0.7rem 1.2rem;
     margin: 0.3rem 0 1rem 0; /* Solo margen inferior */
@@ -89,8 +89,8 @@ html, body {
     display: block; /* Cambiar a block */
     align-self: flex-start; /* Alinear a la izquierda */
     position: relative; /* Para el pseudo-elemento */
-    font-family: 'Redounded LT Pro', 
-    sans-serif;word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    font-family: 'Nunito Sans Black';
+    word-wrap: break-word; /* Permite que las palabras largas se dividan */
     overflow-wrap: break-word; /* Asegura que el texto se ajuste al contenedor */
 }
 
@@ -102,12 +102,12 @@ html, body {
     left: 10px; /* Ajustar la posición */
     border-width: 7px;
     border-style: solid;
-    border-color: transparent transparent #1000cc  transparent; /* Triángulo */
+    border-color: transparent transparent #E8E8E8  transparent; /* Triángulo */
 }
 
 /* Estilo para las etiquetas <a> */
 a {
-    color: #ffffff; /* Color blanco */
+    color: #1000cc; /* Color blanco */
     font-weight: bold; /* Negrita */
     text-decoration: none; /* Sin subrayado */
 }
@@ -152,7 +152,7 @@ a:hover {
     max-height: 8rem;
     overflow-y: auto !important;
     resize: none;
-    font-family: Nunito Sans Black;
+    font-family: 'Nunito Sans Black';
     font-size: 1rem;
     font-weight: 400;
     color: #000;
@@ -198,7 +198,7 @@ a:hover {
 
 /* * BOTONES */
 #btnEnviar {
-    background: #1000cc  !important;
+    background: #3ebfed  !important;
 }
 
 #btnEnviar:hover {
@@ -220,7 +220,7 @@ a:hover {
 }
 
 #btnAdjuntos {
-    background: #1000cc  !important;
+    background: #E8E8E8  !important;
 }
 
 #btnAdjuntos:hover {
@@ -230,14 +230,14 @@ a:hover {
 }
 
 @keyframes btnEnviar {
-    0% { background: #1000cc ; }
-    50% { background: #1000cc ; }
-    100% { background: #1000cc ; }
+    0% { background: #E8E8E8 ; }
+    50% { background: #E8E8E8 ; }
+    100% { background: #E8E8E8 ; }
 }
 
 /* Estilos personalizados para Dropify */
 .file-item {
-    background-color: #DADADA;
+    background-color: #E8E8E8;
     color: #333333;
     padding: 5px;
     margin-bottom: 5px;
@@ -309,7 +309,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     height: 100%;
-    font-family: Nunito Sans Black;
+    font-family: 'Nunito Sans Black';
 }
 
 .dropify-message p {
@@ -423,7 +423,7 @@ a:hover {
 
 .modal {
   z-index: 1125001 !important;
-  background: #1000cc !important;
+  background: #E8E8E8 !important;
   color: #fff !important;
   border-radius: 12px;
   max-height: 90vh; /* Limita la altura máxima al 90% de la pantalla */
@@ -435,7 +435,7 @@ a:hover {
 }
 
 .modal-content {
-  background: #1000cc !important;
+  background: #E8E8E8 !important;
   color: #fff !important;
   border-radius: 12px 12px 0 0;
   max-height: 70vh; /* Ajusta según tu preferencia */
@@ -461,7 +461,7 @@ a:hover {
   text-align: center;
   font-size: 1.2rem;
   margin-bottom: 0;
-  background: #1000cc;
+  background: #E8E8E8;
   padding: 1rem 1rem 0.5rem 1rem;
   position: sticky;
   top: -1px;
@@ -474,7 +474,7 @@ a:hover {
 }
 
 .modal-footer .btn, .modal-footer .btn-flat {
-  color: #1000cc !important;
+  color: #E8E8E8 !important;
   font-weight: bold;
 }
 
@@ -539,7 +539,7 @@ a:hover {
 
 /* === Estilos limpios para select2 en el chat === */
 .select2-container--default .select2-selection--single {
-    background: #1000cc !important;
+    background: #E8E8E8 !important;
     color: #fff !important;
     border: none !important;
     border-bottom: 1px solid #9e9e9e !important;
@@ -563,13 +563,13 @@ a:hover {
     display: none !important;
 }
 .select2-dropdown {
-    background: #1000cc !important;
+    background: #E8E8E8 !important;
     color: #fff !important;
     z-index: 1200000 !important;
 }
 .select2-results__option {
     color: #fff !important;
-    background: #1000cc !important;
+    background: #E8E8E8 !important;
     font-size: 1rem;
 }
 .select2-results__option--highlighted[aria-selected] {

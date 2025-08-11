@@ -187,9 +187,12 @@ const solicitarPasoAgenteHumano = `  <p class="solicitarPasoAgenteHumanoArbol">�
                                                  Por favor, espere un momento mientras lo conectamos.</p>`;
 
 // TODO: MENSAJE SOLICITANDO VIDEOLLAMADA
-const solicitarVideoLlamada = `  <p class="solicitarVideoLlamadaArbol">🎥 <b>Estamos abriendo la videollamada de atención.</b> <br/><br/>
+const solicitarVideoLlamada = `  <p class="solicitarVideoLlamadaArbol">🎥 <b>Usted ha solicitado atención por videollamada con intérprete en lengua de señas.</b> <br/><br/>
 
-                                                 Por favor, espere un momento mientras se establece la conexión con el intérprete en lengua de señas colombiana.</p>`;
+                                                 Por medio del siguiente enlace podrá realizar el proceso de agendamiento o ingresar de inmediato a la atención:<br/>
+                                                 <a href="https://meetings-mintic.mysoul.software/" target="_blank">https://meetings-mintic.mysoul.software/</a><br/><br/>
+                                                 
+                                                 Este servicio es gratuito y está disponible de lunes a viernes, de 8:00 a.m. a 8:00 p.m.</p>`;
 
 // TODO: MENSAJE SOLICITANDO CONDICION DE ADJUNTOS
 const condicionAdjuntos = `<p class="condicionAdjuntosArbol">📝 <b>Adjuntar documentos:</b> <br/><br/>

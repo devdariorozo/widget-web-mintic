@@ -200,18 +200,6 @@ const arbolChatBot = async (remitente, contenido) => {
                 return await procesarCanalAtencion(idChat, remitente, contenido);
             }
 
-            // todo: Condicion Adjuntos Arbol
-            if (arbolChat === 'Condicion Adjuntos' || arbolChat === 'Alerta No Entiendo - Condicion Adjuntos') {
-                return await procesarCondicionAdjuntos(idChat, remitente, contenido);
-            }
-
-            // todo: Confirmar Adjuntos Arbol
-            if (arbolChat === 'Confirmar Adjuntos') {
-                // Aquí se procesarían los archivos adjuntos
-                // Por ahora, finalizar el flujo
-                return await finalizarFlujoArbol(idChat, remitente);
-            }
-
             return true;
         } catch (error) {
             // todo: Enviar mensaje de error por API
@@ -426,44 +414,6 @@ const procesarTipoDocumentoCorreccion = async (idChat, remitente, contenido) => 
     return await solicitarTipoDocumento(idChat, remitente);
 };
 
-// * Procesar Número Documento en modo corrección
-const procesarNumeroDocumentoCorreccion = async (idChat, remitente, contenido) => {
-    // Validar que sea un número válido (mínimo 5 dígitos)
-    if (contenido && contenido.length >= 5 && /^\d+$/.test(contenido)) {
-        // Guardar el número de documento
-        chatData.numeroDocumento = contenido;
-        
-        // En modo corrección, volver a la confirmación de datos
-        return await confirmarDatosIngresados(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Numero Documento';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, ingrese un número de documento válido (mínimo 5 dígitos).</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarNumeroDocumento(idChat, remitente);
-};
-
-// * Procesar Nombre Completo en modo corrección
-const procesarNombreCompletoCorreccion = async (idChat, remitente, contenido) => {
-    // Validar que tenga al menos 2 palabras (nombre y apellido)
-    if (contenido && contenido.trim().split(' ').length >= 2) {
-        // Guardar el nombre completo (capitalizado)
-        chatData.nombreCompleto = capitalizarTexto(contenido.trim());
-        
-        // En modo corrección, volver a la confirmación de datos
-        return await confirmarDatosIngresados(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Nombre Completo';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, ingrese su nombre completo (nombre y apellido).</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarNombreCompleto(idChat, remitente);
-};
-
 // todo: Solicitar Numero Documento Arbol
 const solicitarNumeroDocumento = async (idChat, remitente) => {
     const solicitarNumeroDocumentoArbol = dataEstatica.arbol.solicitarNumeroDocumento;
@@ -589,48 +539,6 @@ const procesarSexo = async (idChat, remitente, contenido) => {
     return await solicitarSexo(idChat, remitente);
 };
 
-// * Procesar Sexo en modo corrección
-const procesarSexoCorreccion = async (idChat, remitente, contenido) => {
-    // Mapeo de números a sexos válidos
-    const mapeoSexos = {
-        '1': 'Masculino',
-        '2': 'Femenino'
-    };
-    
-    // Sexos válidos
-    const sexosValidos = ['Masculino', 'Femenino'];
-    
-    let sexo = null;
-    
-    // Si el usuario ingresa un número, mapearlo al sexo correspondiente
-    if (mapeoSexos[contenido]) {
-        sexo = mapeoSexos[contenido];
-    }
-    // Si el usuario ingresa directamente el sexo
-    else if (sexosValidos.includes(contenido)) {
-        sexo = contenido;
-    }
-    
-    // Validar que se haya obtenido un sexo válido
-    if (sexo) {
-        // Guardar el sexo (capitalizado)
-        chatData.sexo = capitalizarTexto(sexo);
-        
-        // En modo corrección, volver a la confirmación de datos
-        return await confirmarDatosIngresados(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Sexo';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, seleccione una opción válida:<br/><br/>
-    <b>1.</b> Masculino<br/>
-    <b>2.</b> Femenino<br/><br/>
-    O escriba directamente: Masculino, Femenino</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarSexo(idChat, remitente);
-};
-
 // todo: Solicitar Telefono Arbol
 const solicitarTelefono = async (idChat, remitente) => {
     const solicitarTelefonoArbol = dataEstatica.arbol.solicitarTelefono;
@@ -667,25 +575,6 @@ const procesarTelefono = async (idChat, remitente, contenido) => {
     return await solicitarTelefono(idChat, remitente);
 };
 
-// * Procesar Teléfono en modo corrección
-const procesarTelefonoCorreccion = async (idChat, remitente, contenido) => {
-    // Validar que sea un número válido (mínimo 7 dígitos)
-    if (contenido && contenido.length >= 7 && /^\d+$/.test(contenido)) {
-        // Guardar el teléfono
-        chatData.contacto = contenido;
-        
-        // En modo corrección, volver a la confirmación de datos
-        return await confirmarDatosIngresados(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Telefono';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, ingrese un número de teléfono válido (mínimo 7 dígitos).</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarTelefono(idChat, remitente);
-};
-
 // todo: Solicitar Correo Electronico Arbol
 const solicitarCorreoElectronico = async (idChat, remitente) => {
     const solicitarCorreoElectronicoArbol = dataEstatica.arbol.solicitarCorreoElectronico;
@@ -710,26 +599,6 @@ const procesarCorreoElectronico = async (idChat, remitente, contenido) => {
         
         // Si no es corrección, continuar con el flujo normal: solicitar ciudad/municipio
         return await solicitarCiudadMunicipio(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Correo Electronico';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, ingrese un correo electrónico válido (ejemplo: usuario@dominio.com).</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarCorreoElectronico(idChat, remitente);
-};
-
-// * Procesar Correo Electrónico en modo corrección
-const procesarCorreoElectronicoCorreccion = async (idChat, remitente, contenido) => {
-    // Validar formato de correo electrónico
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (contenido && emailRegex.test(contenido)) {
-        // Guardar el correo electrónico
-        chatData.correo = contenido;
-        
-        // En modo corrección, volver a la confirmación de datos
-        return await confirmarDatosIngresados(idChat, remitente);
     }
 
     const pasoArbol = 'Alerta No Entiendo - Correo Electronico';
@@ -773,25 +642,6 @@ const procesarCiudadMunicipio = async (idChat, remitente, contenido) => {
     return await solicitarCiudadMunicipio(idChat, remitente);
 };
 
-// * Procesar Ciudad Municipio en modo corrección
-const procesarCiudadMunicipioCorreccion = async (idChat, remitente, contenido) => {
-    // Validar que tenga al menos 3 caracteres
-    if (contenido && contenido.trim().length >= 3) {
-        // Guardar la ciudad/municipio (capitalizada)
-        chatData.ciudadMunicipio = capitalizarTexto(contenido.trim());
-        
-        // En modo corrección, volver a la confirmación de datos
-        return await confirmarDatosIngresados(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Ciudad Municipio';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, ingrese su ciudad o municipio (mínimo 3 caracteres).</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarCiudadMunicipio(idChat, remitente);
-};
-
 // todo: Confirmar Datos Ingresados Arbol
 const confirmarDatosIngresados = async (idChat, remitente) => {
     const confirmarDatosIngresadosArbol = dataEstatica.arbol.confirmarDatosIngresados;
@@ -818,54 +668,142 @@ const confirmarDatosIngresados = async (idChat, remitente) => {
     return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, mensajeConfirmacion, chatData.descripcion);
 };
 
-// todo: Solicitar Condicion Adjuntos Arbol
-const solicitarCondicionAdjuntos = async (idChat, remitente) => {
-    const solicitarCondicionAdjuntosArbol = dataEstatica.arbol.condicionAdjuntos;
-    chatData.descripcion = 'Se solicita adjuntar documentos.';
-    await modelChat.actualizar(idChat, solicitarCondicionAdjuntosArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.condicionAdjuntos, chatData.descripcion);
-};
-
-// todo: Procesar Condicion Adjuntos Arbol
-const procesarCondicionAdjuntos = async (idChat, remitente, contenido) => {
-    if (contenido === '1') {
-        chatData.adjuntos = 'Si';
-        return await solicitarConfirmarAdjuntos(idChat, remitente);
-    } else if (contenido === '2') {
-        chatData.adjuntos = 'No';
-        chatData.rutaAdjuntos = '-';
-        // Finalizar el flujo del árbol
-        return await finalizarFlujoArbol(idChat, remitente);
-    } else {
-        const pasoArbol = 'Alerta No Entiendo - Condicion Adjuntos';
-        const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-        ⚠️ <i>Por favor, seleccione: 1 para adjuntar documentos o 2 para continuar.</i></p>`;
-
-        await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-        return await solicitarCondicionAdjuntos(idChat, remitente);
+// todo: Procesar Confirmacion Datos Arbol
+const procesarConfirmacionDatos = async (idChat, remitente, contenido) => {
+    // Validar respuesta de confirmación
+    const respuestasValidas = ['SI', 'SÍ', 'Si', 'Sí', 'si', 'sí', '1', 'S', 'Y', 'YES', 'Yes', 'yes'];
+    if (respuestasValidas.includes(contenido.toUpperCase())) {
+        // Datos confirmados, continuar con el siguiente paso: solicitar canal de atención
+        return await solicitarCanalAtencion(idChat, remitente);
+    } else if (contenido.toUpperCase() === 'NO' || contenido.toUpperCase() === 'N' || contenido === '2') {
+        // Datos no confirmados, ir a corregir datos
+        return await solicitarCorregirDatosIngresados(idChat, remitente);
     }
+
+    const pasoArbol = 'Alerta No Entiendo - Confirmacion Datos';
+    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
+    ⚠️ <i>Por favor, responda Si para confirmar o No para corregir los datos.</i></p>`;
+
+    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
+    return await confirmarDatosIngresados(idChat, remitente);
 };
 
-// todo: Solicitar Confirmar Adjuntos Arbol
-const solicitarConfirmarAdjuntos = async (idChat, remitente) => {
-    const solicitarConfirmarAdjuntosArbol = dataEstatica.arbol.confirmarAdjuntos;
-    chatData.descripcion = 'Se solicita adjuntar documentos.';
-    await modelChat.actualizar(idChat, solicitarConfirmarAdjuntosArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.adjuntos, dataEstatica.mensajes.confirmarAdjuntos, chatData.descripcion);
+// todo: Solicitar Corregir Datos Ingresados Arbol
+const solicitarCorregirDatosIngresados = async (idChat, remitente) => {
+    const solicitarCorregirDatosIngresadosArbol = dataEstatica.arbol.corregirDatosIngresados;
+    chatData.descripcion = 'Se solicitan corregir los datos ingresados.';
+    await modelChat.actualizar(idChat, solicitarCorregirDatosIngresadosArbol, chatData);
+    
+    const mensajeCorreccion = `<p class="solicitarCorregirDatosIngresadosArbol">📝 <b>¿Desea corregir algún dato?</b><br/><br/>
+    Por favor, seleccione una opción:<br/><br/>
+    <b>1.</b> Tipo de documento<br/>
+    <b>2.</b> Número de documento<br/>
+    <b>3.</b> Nombre completo<br/>
+    <b>4.</b> Sexo<br/>
+    <b>5.</b> Teléfono<br/>
+    <b>6.</b> Correo electrónico<br/>
+    <b>7.</b> Ciudad o municipio<br/><br/>
+    <i>O responda Sí para continuar con el flujo del árbol</i></p>`;
+    
+    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, mensajeCorreccion, chatData.descripcion);
 };
 
-// todo: Finalizar Flujo del Arbol
-const finalizarFlujoArbol = async (idChat, remitente) => {
-    chatData.descripcion = 'Flujo del árbol completado exitosamente.';
-    await modelChat.actualizar(idChat, dataEstatica.arbol.inicio, chatData);
+// todo: Procesar Corregir Datos Ingresados Arbol
+const procesarCorregirDatosIngresados = async (idChat, remitente, contenido) => {
+    // Validar si quiere continuar
+    const respuestasContinuar = ['SI', 'SÍ', 'Si', 'Sí', 'si', 'sí', 'S', 'Y', 'YES', 'Yes', 'yes'];
+    if (respuestasContinuar.includes(contenido.toUpperCase())) {
+        // Continuar con el flujo del árbol
+        return await solicitarCanalAtencion(idChat, remitente);
+    }
     
-    const mensajeFinal = `<p class="mensajeFinalArbol">🎉 <b>¡Proceso completado exitosamente!</b><br/><br/>
-    ✅ Hemos recibido y validado toda su información.<br/>
-    📋 Sus datos han sido registrados en nuestro sistema.<br/>
-    🎯 Pronto será contactado por uno de nuestros agentes.<br/><br/>
-    💙 ¡Gracias por utilizar nuestro servicio!</p>`;
-    
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, mensajeFinal, chatData.descripcion);
+    // Validar que sea una opción válida del 1 al 9
+    if (contenido && /^[1-9]$/.test(contenido)) {
+        const opcion = parseInt(contenido);
+        
+        // Activar modo corrección
+        chatData.modoCorreccion = true;
+        
+        switch (opcion) {
+            case 1: // Servicio
+                return await solicitarTipoDocumento(idChat, remitente);
+            case 2: // Tipo de documento
+                return await solicitarNumeroDocumento(idChat, remitente);
+            case 3: // Nombre completo
+                return await solicitarNombreCompleto(idChat, remitente);
+            case 4: // Sexo
+                return await solicitarSexo(idChat, remitente);
+            case 5: // Teléfono
+                return await solicitarTelefono(idChat, remitente);
+            case 6: // Correo electrónico
+                return await solicitarCorreoElectronico(idChat, remitente);
+            case 7: // Ciudad o municipio
+                return await solicitarCiudadMunicipio(idChat, remitente);
+        }
+    }
+
+    const pasoArbol = 'Alerta No Entiendo - Corregir Datos';
+    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
+    ⚠️ <i>Por favor, seleccione una opción del 1 al 9 para corregir el dato correspondiente, o responda Sí para continuar:<br/><br/>
+    <b>1.</b> Servicio<br/>
+    <b>2.</b> Tipo de documento<br/>
+    <b>3.</b> Número de documento<br/>
+    <b>4.</b> Nombre completo<br/>
+    <b>5.</b> Sexo<br/>
+    <b>6.</b> Teléfono<br/>
+    <b>7.</b> Correo electrónico<br/>
+    <b>8.</b> Ciudad o municipio<br/>
+    <b>9.</b> Canal de atención</i></p>`;
+
+    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
+    return await solicitarCorregirDatosIngresados(idChat, remitente, contenido); // Recursividad para volver a preguntar
+};
+
+// todo: Solicitar Canal de Atención Arbol
+const solicitarCanalAtencion = async (idChat, remitente) => {
+    const solicitarCanalAtencionArbol = dataEstatica.arbol.solicitarCanalAtencion;
+    chatData.descripcion = 'Se solicita el canal de atención.';
+    await modelChat.actualizar(idChat, solicitarCanalAtencionArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarCanalAtencion, chatData.descripcion);
+};
+
+// todo: Procesar Canal de Atención Arbol
+const procesarCanalAtencion = async (idChat, remitente, contenido) => {
+    // Validar que sea una opción válida
+    if (contenido === '1') {
+        // Guardar el canal de atención
+        chatData.canalAtencion = 'Ser atendido por un agente humano a través del chat';
+        // Agente humano, continuar con el siguiente paso
+        return await solicitarPasoAgenteHumano(idChat, remitente);
+    } else if (contenido === '2') {
+        // Guardar el canal de atención
+        chatData.canalAtencion = 'Conectarse a una videollamada con intérprete en lengua de señas';
+        // Videollamada, continuar con el siguiente paso
+        return await solicitarVideoLlamada(idChat, remitente);
+    }
+
+    const pasoArbol = 'Alerta No Entiendo - Canal Atencion';
+    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
+    ⚠️ <i>Por favor, seleccione una opción: 1 para agente humano o 2 para videollamada.</i></p>`;
+
+    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
+    return await solicitarCanalAtencion(idChat, remitente);
+};
+
+// todo: Solicitar Paso Agente Humano Arbol
+const solicitarPasoAgenteHumano = async (idChat, remitente) => {
+    const solicitarPasoAgenteHumanoArbol = dataEstatica.arbol.solicitarPasoAgenteHumano;
+    chatData.descripcion = 'Se solicita paso a agente humano.';
+    await modelChat.actualizar(idChat, solicitarPasoAgenteHumanoArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarPasoAgenteHumano, chatData.descripcion);
+};
+
+// todo: Solicitar Video Llamada Arbol
+const solicitarVideoLlamada = async (idChat, remitente) => {
+    const solicitarVideoLlamadaArbol = dataEstatica.arbol.solicitarVideoLlamada;
+    chatData.descripcion = 'Se solicita videollamada.';
+    await modelChat.actualizar(idChat, solicitarVideoLlamadaArbol, chatData);
+    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarVideoLlamada, chatData.descripcion);
 };
 
 // // todo: Enviar los archivos adjuntos
@@ -1068,150 +1006,6 @@ const chatCerrado = async (idChat, remitente) => {
     return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.finChat, dataEstatica.mensajes.chatDiferenteAbierto, descripcion, enlaces, lectura, estadoRegistro, responsable);
 };
 
-// todo: Solicitar Canal de Atención Arbol
-const solicitarCanalAtencion = async (idChat, remitente) => {
-    const solicitarCanalAtencionArbol = dataEstatica.arbol.solicitarCanalAtencion;
-    chatData.descripcion = 'Se solicita el canal de atención.';
-    await modelChat.actualizar(idChat, solicitarCanalAtencionArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarCanalAtencion, chatData.descripcion);
-};
-
-// todo: Procesar Canal de Atención Arbol
-const procesarCanalAtencion = async (idChat, remitente, contenido) => {
-    // Validar que sea una opción válida
-    if (contenido === '1') {
-        // Guardar el canal de atención
-        chatData.canalAtencion = 'Ser atendido por un agente humano a través del chat';
-        // Agente humano, continuar con el siguiente paso
-        return await solicitarPasoAgenteHumano(idChat, remitente);
-    } else if (contenido === '2') {
-        // Guardar el canal de atención
-        chatData.canalAtencion = 'Conectarse a una videollamada con intérprete en lengua de señas';
-        // Videollamada, continuar con el siguiente paso
-        return await solicitarVideoLlamada(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Canal Atencion';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, seleccione una opción: 1 para agente humano o 2 para videollamada.</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarCanalAtencion(idChat, remitente);
-};
-
-// todo: Solicitar Paso Agente Humano Arbol
-const solicitarPasoAgenteHumano = async (idChat, remitente) => {
-    const solicitarPasoAgenteHumanoArbol = dataEstatica.arbol.solicitarPasoAgenteHumano;
-    chatData.descripcion = 'Se solicita paso a agente humano.';
-    await modelChat.actualizar(idChat, solicitarPasoAgenteHumanoArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarPasoAgenteHumano, chatData.descripcion);
-};
-
-// todo: Solicitar Video Llamada Arbol
-const solicitarVideoLlamada = async (idChat, remitente) => {
-    const solicitarVideoLlamadaArbol = dataEstatica.arbol.solicitarVideoLlamada;
-    chatData.descripcion = 'Se solicita videollamada.';
-    await modelChat.actualizar(idChat, solicitarVideoLlamadaArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarVideoLlamada, chatData.descripcion);
-};
-
-// todo: Solicitar Corregir Datos Ingresados Arbol
-const solicitarCorregirDatosIngresados = async (idChat, remitente) => {
-    const solicitarCorregirDatosIngresadosArbol = dataEstatica.arbol.corregirDatosIngresados;
-    chatData.descripcion = 'Se solicitan corregir los datos ingresados.';
-    await modelChat.actualizar(idChat, solicitarCorregirDatosIngresadosArbol, chatData);
-    
-    const mensajeCorreccion = `<p class="solicitarCorregirDatosIngresadosArbol">📝 <b>¿Desea corregir algún dato?</b><br/><br/>
-    Por favor, seleccione una opción:<br/><br/>
-    <b>1.</b> Servicio<br/>
-    <b>2.</b> Tipo de documento<br/>
-    <b>3.</b> Número de documento<br/>
-    <b>4.</b> Nombre completo<br/>
-    <b>5.</b> Sexo<br/>
-    <b>6.</b> Teléfono<br/>
-    <b>7.</b> Correo electrónico<br/>
-    <b>8.</b> Ciudad o municipio<br/>
-    <b>9.</b> Canal de atención<br/><br/>
-    <i>O responda Sí para continuar con el flujo del árbol</i></p>`;
-    
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, mensajeCorreccion, chatData.descripcion);
-};
-
-// todo: Procesar Confirmacion Datos Arbol
-const procesarConfirmacionDatos = async (idChat, remitente, contenido) => {
-    // Validar respuesta de confirmación
-    const respuestasValidas = ['SI', 'SÍ', 'Si', 'Sí', 'si', 'sí', '1', 'S', 'Y', 'YES', 'Yes', 'yes'];
-    if (respuestasValidas.includes(contenido.toUpperCase())) {
-        // Datos confirmados, continuar con el siguiente paso: solicitar canal de atención
-        return await solicitarCanalAtencion(idChat, remitente);
-    } else if (contenido.toUpperCase() === 'NO' || contenido.toUpperCase() === 'N' || contenido === '2') {
-        // Datos no confirmados, ir a corregir datos
-        return await solicitarCorregirDatosIngresados(idChat, remitente);
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Confirmacion Datos';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, responda Si para confirmar o No para corregir los datos.</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await procesarConfirmacionDatos(idChat, remitente, contenido); // Recursividad para volver a preguntar
-};
-
-// todo: Procesar Corregir Datos Ingresados Arbol
-const procesarCorregirDatosIngresados = async (idChat, remitente, contenido) => {
-    // Validar si quiere continuar
-    const respuestasContinuar = ['SI', 'SÍ', 'Si', 'Sí', 'si', 'sí', 'S', 'Y', 'YES', 'Yes', 'yes'];
-    if (respuestasContinuar.includes(contenido.toUpperCase())) {
-        // Continuar con el flujo del árbol
-        return await solicitarCanalAtencion(idChat, remitente);
-    }
-    
-    // Validar que sea una opción válida del 1 al 9
-    if (contenido && /^[1-9]$/.test(contenido)) {
-        const opcion = parseInt(contenido);
-        
-        // Activar modo corrección
-        chatData.modoCorreccion = true;
-        
-        switch (opcion) {
-            case 1: // Servicio
-                return await solicitarOpcionesServicios(idChat, remitente);
-            case 2: // Tipo de documento
-                return await solicitarTipoDocumento(idChat, remitente);
-            case 3: // Número de documento
-                return await solicitarNumeroDocumento(idChat, remitente);
-            case 4: // Nombre completo
-                return await solicitarNombreCompleto(idChat, remitente);
-            case 5: // Sexo
-                return await solicitarSexo(idChat, remitente);
-            case 6: // Teléfono
-                return await solicitarTelefono(idChat, remitente);
-            case 7: // Correo electrónico
-                return await solicitarCorreoElectronico(idChat, remitente);
-            case 8: // Ciudad o municipio
-                return await solicitarCiudadMunicipio(idChat, remitente);
-            case 9: // Canal de atención
-                return await solicitarCanalAtencion(idChat, remitente);
-        }
-    }
-
-    const pasoArbol = 'Alerta No Entiendo - Corregir Datos';
-    const alertaNoEntiendo = `<p class="alertaNoEntiendoArbol">❓ <b>No entiendo su respuesta.</b><br/><br/>
-    ⚠️ <i>Por favor, seleccione una opción del 1 al 9 para corregir el dato correspondiente, o responda Sí para continuar:<br/><br/>
-    <b>1.</b> Servicio<br/>
-    <b>2.</b> Tipo de documento<br/>
-    <b>3.</b> Número de documento<br/>
-    <b>4.</b> Nombre completo<br/>
-    <b>5.</b> Sexo<br/>
-    <b>6.</b> Teléfono<br/>
-    <b>7.</b> Correo electrónico<br/>
-    <b>8.</b> Ciudad o municipio<br/>
-    <b>9.</b> Canal de atención</i></p>`;
-
-    await manejarNoEntiendo(idChat, remitente, pasoArbol, alertaNoEntiendo);
-    return await solicitarCorregirDatosIngresados(idChat, remitente, contenido); // Recursividad para volver a preguntar
-};
-
 // ! EXPORTACIONES
 module.exports = {
     arbolChatBot,
@@ -1242,8 +1036,4 @@ module.exports = {
     procesarCanalAtencion,
     solicitarPasoAgenteHumano,
     solicitarVideoLlamada,
-    solicitarCondicionAdjuntos,
-    procesarCondicionAdjuntos,
-    solicitarConfirmarAdjuntos,
-    finalizarFlujoArbol
 };

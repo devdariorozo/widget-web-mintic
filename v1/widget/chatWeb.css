@@ -50,10 +50,10 @@ html, body {
 #contenedorWidget .bar-chat {
   height: 4rem;
   max-height: 4rem;
-  background-color: #fff;
+  background-color: #DBE7FB;
   display: flex;
   box-sizing: border-box;
-  font-family: Nunito Sans Black;
+  font-family: 'Nunito Sans Black';
   position: relative;
   z-index: 1000 !important;
   padding: 0 0.2rem;
@@ -82,7 +82,7 @@ html, body {
 #contenedorWidget .btn-chat-pau span {
   padding: 0.5rem;
   color: #41beee;
-  font-family: Nunito Sans Black;
+  font-family: 'Nunito Sans Black';
   font-weight: 700;
   font-size: 1rem;
 }
@@ -417,7 +417,7 @@ html, body {
 /* ! ESTILO PARA EL ÍCONO */
 #estadoChatWeb i {
   font-size: .7rem;       /* Tamaño de la fuente del ícono */
-  color: #3ebfed ;       /* Color verde (#FF6523) para el ícono */
+  color: #11ce73 ;       /* Color verde (#11ce73) para el ícono */
   margin-right: 5px;      /* Espacio entre el ícono y el texto */
 }
 
