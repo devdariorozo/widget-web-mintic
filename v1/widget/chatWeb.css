@@ -91,6 +91,12 @@ html, body {
 #contenedorWidget .img-btn {
   height: 4rem;
   margin-right: -1rem;
+  cursor: pointer;
+}
+
+#contenedorWidget .img-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 
 /* Media queries para diferentes tamaños de pantalla */

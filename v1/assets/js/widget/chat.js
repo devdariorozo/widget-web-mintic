@@ -622,16 +622,22 @@ async function listarConversacion() {
     }
 }
 
-// ! FUNCIÓN PARA VERIFICAR SI EL FORMULARIO HA SIDO ENVIADO
-function verificarFormularioEnviado() {
-    // Busca si existe algún elemento con la clase datos-diligenciados
-    formularioEnviado = !!document.querySelector('.datos-diligenciados');
-    return formularioEnviado;
+// ! FUNCIÓN PARA VERIFICAR SI EL MENSAJE DE OPCIONES SERVICIOS HA SIDO MOSTRADO
+function verificarOpcionesServiciosMostradas() {
+    // Busca si existe algún mensaje que contenga "¿Cómo podemos ayudarle hoy?"
+    const mensajes = document.querySelectorAll('.mensaje-enviado .texto');
+    for (const mensaje of mensajes) {
+        const contenido = mensaje.textContent || mensaje.innerText;
+        if (contenido && contenido.includes('¿Cómo podemos ayudarle hoy?')) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // ! FUNCIÓN PARA ACTUALIZAR ÚLTIMA ACTIVIDAD
 function actualizarUltimaActividad() {
-    if (verificarFormularioEnviado()) {
+    if (verificarOpcionesServiciosMostradas()) {
         ultimaActividad = Date.now();
         tiempoInactividad = 0;
         umbralesNotificados = [];
@@ -645,7 +651,7 @@ eventosActividad.forEach(evento => {
 
 // * FUNCION PARA VIGILAR LA INACTIVIDAD DEL CHAT
 async function vigilarInactividad() {
-    if (!verificarFormularioEnviado()) return;
+    if (!verificarOpcionesServiciosMostradas()) return;
 
     const tiempoActual = Date.now();
     tiempoInactividad = Math.floor((tiempoActual - ultimaActividad) / 1000);
@@ -680,7 +686,7 @@ async function vigilarInactividad() {
 function iniciarVigilanciaInactividad() {
     if (inactividadInterval) clearInterval(inactividadInterval);
     // Solo iniciar la vigilancia si el formulario ha sido enviado
-    if (verificarFormularioEnviado()) {
+    if (verificarOpcionesServiciosMostradas()) {
         inactividadInterval = setInterval(vigilarInactividad, 10000); // Vigilar cada 10 segundos
     }
 }
@@ -693,7 +699,7 @@ function detenerVigilanciaInactividad() {
 document.addEventListener('DOMContentLoaded', () => {
     // Verificar el estado del formulario cada 5 segundos hasta que sea enviado
     const verificarFormularioInterval = setInterval(() => {
-        if (verificarFormularioEnviado()) {
+        if (verificarOpcionesServiciosMostradas()) {
             clearInterval(verificarFormularioInterval);
             iniciarVigilanciaInactividad();
         }

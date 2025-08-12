@@ -41,6 +41,32 @@ const capitalizarAbreviacion = (abreviacion) => {
     return [primeraCap, ...restoCap].join('.');
 };
 
+// * Formatear número con separadores de miles
+const formatearNumeroConMiles = (numero) => {
+    if (!numero || numero === '-') return numero;
+    // Si ya tiene separadores de miles, no hacer nada
+    if (numero.toString().includes('.')) return numero;
+    // Convertir a string y eliminar cualquier formato previo
+    const numeroLimpio = numero.toString().replace(/\D/g, '');
+    // Formatear con separadores de miles
+    return numeroLimpio.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+
+// * Formatear teléfono con espacios
+const formatearTelefono = (telefono) => {
+    if (!telefono || telefono === '-') return telefono;
+    // Si ya tiene espacios, no hacer nada
+    if (telefono.toString().includes(' ')) return telefono;
+    // Convertir a string y eliminar cualquier formato previo
+    const numeroLimpio = telefono.toString().replace(/\D/g, '');
+    // Formatear con espacios: XXX XXX XXXX
+    if (numeroLimpio.length === 10) {
+        return `${numeroLimpio.substring(0, 3)} ${numeroLimpio.substring(3, 6)} ${numeroLimpio.substring(6, 10)}`;
+    }
+    // Si no es de 10 dígitos, devolver tal como está
+    return numeroLimpio;
+};
+
 // ! VARIABLES GLOBALES
 let chatData = {
     controlApi: '-',
@@ -50,11 +76,9 @@ let chatData = {
     autorizacionDatosPersonales: '-',
     tipoDocumento: '-',
     numeroDocumento: '-',
-    numeroDocumentoFormateado: '-',
     nombreCompleto: '-',
     sexo: '-',
     contacto: '-',
-    contactoFormateado: '-',
     correo: '-',
     ciudadMunicipio: '-',
     canalAtencion: '-',
@@ -90,11 +114,9 @@ const arbolChatBot = async (remitente, contenido) => {
     chatData.autorizacionDatosPersonales = chat[0].AUTORIZACION_DATOS_PERSONALES || defaultData;
     chatData.tipoDocumento = chat[0].TIPO_DOCUMENTO || defaultData;
     chatData.numeroDocumento = chat[0].NUMERO_DOCUMENTO || defaultData;
-    chatData.numeroDocumentoFormateado = chat[0].NUMERO_DOCUMENTO_FORMATEADO || defaultData;
     chatData.nombreCompleto = chat[0].NOMBRE_COMPLETO || defaultData;
     chatData.sexo = chat[0].SEXO || defaultData;
     chatData.contacto = chat[0].CONTACTO || defaultData;
-    chatData.contactoFormateado = chat[0].CONTACTO_FORMATEADO || defaultData;
     chatData.correo = chat[0].CORREO || defaultData;
     chatData.ciudadMunicipio = chat[0].CIUDAD_MUNICIPIO || defaultData;
     chatData.canalAtencion = chat[0].CANAL_ATENCION || defaultData;
@@ -198,6 +220,11 @@ const arbolChatBot = async (remitente, contenido) => {
             // todo: Canal Atencion Arbol
             if (arbolChat === 'Solicitar Canal Atencion' || arbolChat === 'Alerta No Entiendo - Canal Atencion') {
                 return await procesarCanalAtencion(idChat, remitente, contenido);
+            }
+
+            // todo: Paso Agente Humano Arbol
+            if (arbolChat === 'Paso Agente Humano' || arbolChat === 'Alerta No Entiendo - Paso Agente Humano') {
+                return await procesarPasoAgenteHumano_SoulChat(idChat, remitente, contenido);
             }
 
             return true;
@@ -323,7 +350,15 @@ const procesarTipoDocumento = async (idChat, remitente, contenido) => {
         '4': 'T.I'
     };
     
-    // Tipos de documento válidos (solo abreviaciones)
+    // Mapeo de formatos sin puntos a formatos con puntos
+    const mapeoFormatos = {
+        'CC': 'C.C',
+        'CE': 'C.E',
+        'TI': 'T.I',
+        'P': 'P'
+    };
+    
+    // Tipos de documento válidos (con puntos)
     const tiposValidos = ['C.C', 'C.E', 'P', 'T.I'];
     
     let tipoDocumento = null;
@@ -332,9 +367,18 @@ const procesarTipoDocumento = async (idChat, remitente, contenido) => {
     if (mapeoTiposDocumento[contenido]) {
         tipoDocumento = mapeoTiposDocumento[contenido];
     }
-    // Si el usuario ingresa directamente el tipo de documento
-    else if (tiposValidos.includes(contenido.toUpperCase())) {
-        tipoDocumento = contenido.toUpperCase();
+    // Si el usuario ingresa directamente el tipo de documento (con o sin puntos)
+    else {
+        const contenidoNormalizado = contenido.toUpperCase().trim();
+        
+        // Verificar si es un formato válido con puntos
+        if (tiposValidos.includes(contenidoNormalizado)) {
+            tipoDocumento = contenidoNormalizado;
+        }
+        // Verificar si es un formato sin puntos
+        else if (mapeoFormatos[contenidoNormalizado]) {
+            tipoDocumento = mapeoFormatos[contenidoNormalizado];
+        }
     }
     
     // Validar que se haya obtenido un tipo válido
@@ -377,7 +421,15 @@ const procesarTipoDocumentoCorreccion = async (idChat, remitente, contenido) => 
         '4': 'T.I'
     };
     
-    // Tipos de documento válidos (solo abreviaciones)
+    // Mapeo de formatos sin puntos a formatos con puntos
+    const mapeoFormatos = {
+        'CC': 'C.C',
+        'CE': 'C.E',
+        'TI': 'T.I',
+        'P': 'P'
+    };
+    
+    // Tipos de documento válidos (con puntos)
     const tiposValidos = ['C.C', 'C.E', 'P', 'T.I'];
     
     let tipoDocumento = null;
@@ -386,9 +438,18 @@ const procesarTipoDocumentoCorreccion = async (idChat, remitente, contenido) => 
     if (mapeoTiposDocumento[contenido]) {
         tipoDocumento = mapeoTiposDocumento[contenido];
     }
-    // Si el usuario ingresa directamente el tipo de documento
-    else if (tiposValidos.includes(contenido.toUpperCase())) {
-        tipoDocumento = contenido.toUpperCase();
+    // Si el usuario ingresa directamente el tipo de documento (con o sin puntos)
+    else {
+        const contenidoNormalizado = contenido.toUpperCase().trim();
+        
+        // Verificar si es un formato válido con puntos
+        if (tiposValidos.includes(contenidoNormalizado)) {
+            tipoDocumento = contenidoNormalizado;
+        }
+        // Verificar si es un formato sin puntos
+        else if (mapeoFormatos[contenidoNormalizado]) {
+            tipoDocumento = mapeoFormatos[contenidoNormalizado];
+        }
     }
     
     // Validar que se haya obtenido un tipo válido
@@ -428,9 +489,8 @@ const procesarNumeroDocumento = async (idChat, remitente, contenido) => {
     const soloDigitos = (contenido || '').replace(/\D/g, '');
     // Validar que sea un número válido (mínimo 5 dígitos)
     if (soloDigitos && soloDigitos.length >= 5) {
-        // Guardar: normalizado y formateado (tal cual ingresa el usuario)
-        chatData.numeroDocumento = soloDigitos;
-        chatData.numeroDocumentoFormateado = (contenido || '').trim();
+        // Guardar el número formateado con separadores de miles
+        chatData.numeroDocumento = formatearNumeroConMiles(soloDigitos);
         
         // Si estamos en modo corrección, volver a la confirmación
         if (chatData.modoCorreccion) {
@@ -553,9 +613,8 @@ const procesarTelefono = async (idChat, remitente, contenido) => {
     const soloDigitos = (contenido || '').replace(/\D/g, '');
     // Validar que sea un número válido (mínimo 7 dígitos)
     if (soloDigitos && soloDigitos.length >= 7) {
-        // Guardar: normalizado y formateado (tal cual ingresa el usuario)
-        chatData.contacto = soloDigitos;
-        chatData.contactoFormateado = (contenido || '').trim();
+        // Guardar el teléfono formateado con espacios
+        chatData.contacto = formatearTelefono(soloDigitos);
         
         // Si estamos en modo corrección, volver a la confirmación
         if (chatData.modoCorreccion) {
@@ -648,12 +707,8 @@ const confirmarDatosIngresados = async (idChat, remitente) => {
     chatData.descripcion = 'Se solicitan confirmar los datos ingresados.';
     await modelChat.actualizar(idChat, confirmarDatosIngresadosArbol, chatData);
     
-    const numDocMostrar = (chatData.numeroDocumentoFormateado && chatData.numeroDocumentoFormateado !== '-')
-        ? chatData.numeroDocumentoFormateado
-        : chatData.numeroDocumento;
-    const telMostrar = (chatData.contactoFormateado && chatData.contactoFormateado !== '-')
-        ? chatData.contactoFormateado
-        : chatData.contacto;
+    const numDocMostrar = chatData.numeroDocumento;
+    const telMostrar = chatData.contacto;
     
     // Construir mensaje con los datos ingresados (capitalizados y respetando formato ingresado donde aplica)
     const mensajeConfirmacion = dataEstatica.mensajes.confirmarDatosIngresados
@@ -795,7 +850,83 @@ const solicitarPasoAgenteHumano = async (idChat, remitente) => {
     const solicitarPasoAgenteHumanoArbol = dataEstatica.arbol.solicitarPasoAgenteHumano;
     chatData.descripcion = 'Se solicita paso a agente humano.';
     await modelChat.actualizar(idChat, solicitarPasoAgenteHumanoArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarPasoAgenteHumano, chatData.descripcion);
+    await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarPasoAgenteHumano, chatData.descripcion);
+    return await procesarPasoAgenteHumano_SoulChat(idChat, remitente);
+};
+
+// todo: Procesar Paso Agente Humano Soul Chat Arbol
+const procesarPasoAgenteHumano_SoulChat = async (idChat, remitente) => {
+    try {
+        // Construir el mensaje con los datos del cliente
+        const contenido = `Cliente solicita paso a agente humano. Datos del cliente:
+- Tipo de documento: ${chatData.tipoDocumento}
+- Número de documento: ${chatData.numeroDocumento}
+- Nombre completo: ${chatData.nombreCompleto}
+- Sexo: ${chatData.sexo}
+- Teléfono: ${chatData.contacto}
+- Correo: ${chatData.correo}
+- Ciudad: ${chatData.ciudadMunicipio}
+- Servicio: ${chatData.servicio}`;
+
+        const estructuraMensaje = {
+            provider: "web",
+            canal: 3,
+            idChat: idChat,
+            remitente: remitente,
+            estado: "START",
+            mensaje: contenido,
+            type: "TEXT"
+        };
+        
+        // Control de intentos
+        if (chatData.controlPeticiones <= 5) {
+            
+            // Consumir servicio de AI Soul
+            const response = await serviceSoulChat.procesarMensajeAISoul(estructuraMensaje);
+            chatData.resultadoApi = JSON.stringify(response.data);
+
+            // Si la respuesta tiene status 200 o 202
+            if (response.status === 200 || response.status === 202) {
+                chatData.controlApi = dataEstatica.configuracion.controlApi.success;
+                chatData.descripcion = 'AI Soul ha recibido el mensaje, se encuentra procesando la respuesta.';
+                
+                // Actualizar el chat
+                await modelChat.actualizar(idChat, dataEstatica.arbol.solicitarPasoAgenteHumano, chatData);
+                
+                // No enviar mensaje adicional, ya se envió el mensaje inicial en solicitarPasoAgenteHumano
+                return true;
+            } else {
+                chatData.controlPeticiones++;
+                chatData.descripcion = 'AI Soul está presentando una novedad o incidencia técnica.';
+                
+                // Actualizar el chat
+                await modelChat.actualizar(idChat, dataEstatica.arbol.errorApi, chatData);
+
+                // Enviar mensaje de error por API
+                const api = 'Soul Chat';
+                const procesoApi = 'Procesar Mensaje AI';
+                const error = response;
+                return await errorAPI(api, procesoApi, error, idChat, remitente);
+            }
+
+        } else {
+            chatData.descripcion = 'Se presenta novedad con el servicio de AI Soul, se procede a cerrar el chat por límite de intentos.';
+            
+            // Crear mensaje de novedad o incidencia técnica
+            await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.novedadIncidenciaTecnica, chatData.descripcion);
+
+            // Cerrar el chat
+            await modelChat.cerrar(remitente, dataEstatica.configuracion.estadoChat.recibido, dataEstatica.configuracion.estadoGestion.cerrado, dataEstatica.arbol.despedida, dataEstatica.configuracion.controlApi.error, chatData.descripcion, dataEstatica.configuracion.estadoRegistro.activo, dataEstatica.configuracion.responsable);
+            
+            return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.finChat, dataEstatica.mensajes.despedida, 'Chat cerrado por límite de intentos con AI Soul.');
+        }
+
+    } catch (error) {
+        const api = 'Soul Chat';
+        const procesoApi = 'Procesar Mensaje AI';
+        console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → procesarPasoAgenteHumano_SoulChat: ', error);
+        return await errorAPI(api, procesoApi, error, idChat, remitente);
+    }
 };
 
 // todo: Solicitar Video Llamada Arbol
@@ -803,7 +934,16 @@ const solicitarVideoLlamada = async (idChat, remitente) => {
     const solicitarVideoLlamadaArbol = dataEstatica.arbol.solicitarVideoLlamada;
     chatData.descripcion = 'Se solicita videollamada.';
     await modelChat.actualizar(idChat, solicitarVideoLlamadaArbol, chatData);
-    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarVideoLlamada, chatData.descripcion);
+    
+    // Enviar mensaje con información de videollamada
+    await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.solicitarVideoLlamada, chatData.descripcion);
+    
+    // Cerrar el chat después de enviar el mensaje
+    chatData.descripcion = 'Chat cerrado por solicitud de videollamada.';
+    await modelChat.cerrar(remitente, dataEstatica.configuracion.estadoChat.recibido, dataEstatica.configuracion.estadoGestion.cerrado, dataEstatica.arbol.despedida, dataEstatica.configuracion.controlApi.success, chatData.descripcion, dataEstatica.configuracion.estadoRegistro.activo, dataEstatica.configuracion.responsable);
+    
+    // Enviar mensaje de despedida
+    return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.finChat, dataEstatica.mensajes.despedida, 'Chat finalizado por solicitud de videollamada.');
 };
 
 // // todo: Enviar los archivos adjuntos
@@ -948,7 +1088,7 @@ const crearAlertaInactividad = async (idChatWeb, descripcion, nombreCliente = nu
                     ⚠️ Recuerde que si no responde, la sesión se cerrará automáticamente.<br/><br/>
                     💬 Responda por favor para mantener la conversación activa.</p>`
                 : `<p class=\"alertaInactividadArbol\"><b>Inactividad de 3 minutos.</b><br/><br/>
-                    ⏳ Apreciado Ciudadano, lleva 3 minutos de inactividad.<br/><br/>
+                    ⏳ Apreciado Usuario, lleva 3 minutos de inactividad.<br/><br/>
                     ⚠️ Recuerde que si no responde, la sesión se cerrará automáticamente.<br/><br/>
                     💬 Responda por favor para mantener la conversación activa.</p>`;
         } else if (descripcion.includes('4 minutos')) {
@@ -959,7 +1099,7 @@ const crearAlertaInactividad = async (idChatWeb, descripcion, nombreCliente = nu
                     💬 Responda por favor ahora para mantener la conversación activa. <br/><br/>
                     👉 Si no responde, el chat se cerrará automáticamente. 😔</p>`
                 : `<p class=\"alertaInactividadArbol\"><b>Inactividad de 4 minutos.</b><br/><br/>
-                    ⚠️ Apreciado Ciudadano, su sesión se cerrará en 1 minuto por inactividad.<br/><br/>
+                    ⚠️ Apreciado Usuario, su sesión se cerrará en 1 minuto por inactividad.<br/><br/>
                     🚨 ¡Última advertencia! <br/><br/>
                     💬 Responda por favor ahora para mantener la conversación activa. <br/><br/>
                     👉 Si no responde, el chat se cerrará automáticamente. 😔</p>`;
@@ -1009,11 +1149,8 @@ const chatCerrado = async (idChat, remitente) => {
 // ! EXPORTACIONES
 module.exports = {
     arbolChatBot,
-    // actualizarRutaAdjuntos,
-    // procesarArchivosAdjuntos,
     crearAlertaInactividad,
     crearMensajeCierreInactividad,
-    // Nuevas funciones del árbol
     solicitarTipoDocumento,
     procesarTipoDocumento,
     solicitarNumeroDocumento,
@@ -1035,5 +1172,6 @@ module.exports = {
     solicitarCanalAtencion,
     procesarCanalAtencion,
     solicitarPasoAgenteHumano,
+    procesarPasoAgenteHumano_SoulChat,
     solicitarVideoLlamada,
 };

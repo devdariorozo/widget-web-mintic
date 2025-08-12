@@ -423,7 +423,7 @@ const vigilaInactividadChat = async (req, res) => {
             const chat = await modelChat.filtrar(idChatWeb);
 
             if (chat.length > 0 && chat[0].GESTION === 'Abierto') {
-                const nombreCliente = chat[0].NOMBRES || null;
+                const nombreCliente = chat[0].NOMBRE_COMPLETO || null;
                 const idChat = chat[0].ID_CHAT;
                 
                 // Consultar mensajes existentes de inactividad y cierre
