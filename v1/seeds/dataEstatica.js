@@ -65,7 +65,10 @@ const controlApi = {
 // * MENSAJES
 // TODO: MENSAJE DE SALUDO
 const saludo = `<p class="saludoChat">
-                    👋 ¡Bienvenido(a)! Le saluda el Asistente Virtual del Ministerio TIC.<br/>
+                    👋 ¡Bienvenido(a)!<br/><br/> 
+                    
+                    Le saluda el Asistente Virtual del Ministerio TIC.<br/><br/>
+                    
                     Este es un servicio de apoyo para personas con discapacidad auditiva o personas que desean ayudarles.<br/>
                     Estamos aquí para orientarle y facilitar su comunicación con otras personas o entidades.<br/>
                     Este servicio es completamente gratuito y confidencial.</p>`;

@@ -415,7 +415,7 @@ const vigilaInactividadChat = async (req, res) => {
             });
         }
 
-        const { idChatWeb, tiempoInactividad } = req.body;
+        const { idChatWeb, tiempoInactividad} = req.body;
         
         const ultimoMensaje = await model.filtrarUltimoMensaje(idChatWeb);
 
@@ -424,32 +424,30 @@ const vigilaInactividadChat = async (req, res) => {
 
             if (chat.length > 0 && chat[0].GESTION === 'Abierto') {
                 const nombreCliente = chat[0].NOMBRE_COMPLETO || null;
-                const idChat = chat[0].ID_CHAT;
-                
-                // Consultar mensajes existentes de inactividad y cierre
-                const mensajes = await model.listarConversacion(idChat);
-                const existeAlerta2 = mensajes.some(msg => msg.TIPO === 'Inactividad' && msg.CONTENIDO && msg.CONTENIDO.includes('2 minutos'));
-                const existeAlerta3 = mensajes.some(msg => msg.TIPO === 'Inactividad' && msg.CONTENIDO && msg.CONTENIDO.includes('3 minutos'));
-                const existeAlerta4 = mensajes.some(msg => msg.TIPO === 'Inactividad' && msg.CONTENIDO && msg.CONTENIDO.includes('4 minutos'));
-                const existeCierre = mensajes.some(msg => msg.TIPO === 'Fin Chat' && msg.CONTENIDO && msg.CONTENIDO.includes('inactividad'));
 
                 // Primer aviso a los 2 minutos
-                if (tiempoInactividad >= 2 && tiempoInactividad < 3 && !existeAlerta2) {
+                if (tiempoInactividad >= 2 && tiempoInactividad < 3) {
                     const descripcion = `Inactividad de 2 minutos.`;
-                    await modelArbolChatBot.crearAlertaInactividad(idChatWeb, descripcion, nombreCliente);
+                    if (ultimoMensaje.DESCRIPCION !== descripcion) {
+                        await modelArbolChatBot.crearAlertaInactividad(idChatWeb, descripcion, nombreCliente);
+                    }
                 }
                 // Segundo aviso a los 3 minutos
-                else if (tiempoInactividad >= 3 && tiempoInactividad < 4 && !existeAlerta3) {
+                else if (tiempoInactividad >= 3 && tiempoInactividad < 4) {
                     const descripcion = `Inactividad de 3 minutos.`;
-                    await modelArbolChatBot.crearAlertaInactividad(idChatWeb, descripcion, nombreCliente);
+                    if (ultimoMensaje.DESCRIPCION !== descripcion) {
+                        await modelArbolChatBot.crearAlertaInactividad(idChatWeb, descripcion, nombreCliente);
+                    }
                 }
                 // Tercer aviso a los 4 minutos
-                else if (tiempoInactividad >= 4 && tiempoInactividad < 5 && !existeAlerta4) {
+                else if (tiempoInactividad >= 4 && tiempoInactividad < 5) {
                     const descripcion = `Inactividad de 4 minutos.`;
-                    await modelArbolChatBot.crearAlertaInactividad(idChatWeb, descripcion, nombreCliente);
+                    if (ultimoMensaje.DESCRIPCION !== descripcion) {
+                        await modelArbolChatBot.crearAlertaInactividad(idChatWeb, descripcion, nombreCliente);
+                    }
                 }
                 // Cierre del chat a los 5 minutos
-                else if (tiempoInactividad >= 5 && !existeCierre) {
+                else if (tiempoInactividad >= 5) {
                     await modelArbolChatBot.crearMensajeCierreInactividad(idChatWeb);
                     await modelChat.cerrar(
                         idChatWeb,
@@ -485,6 +483,7 @@ const vigilaInactividadChat = async (req, res) => {
         });
     }
 };
+
 // ! EXPORTACIONES
 module.exports = {
     crear,

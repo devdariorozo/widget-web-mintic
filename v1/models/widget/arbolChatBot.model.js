@@ -284,7 +284,6 @@ const solicitarAutorizacionDatosPersonales = async (idChat, remitente) => {
 const procesarAutorizacionDatosPersonales = async (idChat, remitente, contenido) => {
     // Convertir la primera letra a mayúscula y el resto a minúscula
     contenido = contenido.charAt(0).toUpperCase() + contenido.slice(1).toLowerCase();
-    console.log('contenido: ', contenido);
     if (contenido === 'Si') {
         // Guardar la autorización
         chatData.autorizacionDatosPersonales = 'Si';
@@ -317,7 +316,6 @@ const solicitarRolUsuario = async (idChat, remitente) => {
 const procesarRolUsuario = async (idChat, remitente, contenido) => {
     // Convertir la primera letra a mayúscula y el resto a minúscula
     contenido = contenido.charAt(0).toUpperCase() + contenido.slice(1).toLowerCase();
-    console.log('contenido: ', contenido);
     if (contenido === '1' || contenido === '2') {
         // Continuar con el siguiente paso: solicitar tipo de documento
         return await solicitarTipoDocumento(idChat, remitente);
@@ -987,7 +985,6 @@ const manejarNoEntiendo = async (idChat, remitente, pasoArbol, alertaNoEntiendo)
         chatData.descripcion = 'Se notifica que no se entiende el mensaje.';
         await modelChat.actualizar(idChat, pasoArbol, chatData);
         const mensaje = await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, alertaNoEntiendo, chatData.descripcion);
-        console.log('mensaje: ', mensaje);
         return true;
     } catch (error) {
         // todo: Enviar mensaje de error por API
@@ -1077,7 +1074,7 @@ const crearAlertaInactividad = async (idChatWeb, descripcion, nombreCliente = nu
                     💬 Estamos aquí para asistirle. <br/><br/> 
                     👉 Por favor, responda a su última interacción para continuar. 😊</p>`
                 : `<p class=\"alertaInactividadArbol\"><b>Inactividad de 2 minutos.</b><br/><br/>
-                    ⏳ Apreciado Ciudadano, hemos notado que lleva 2 minutos de inactividad.<br/><br/>
+                    ⏳ Apreciado Usuario, hemos notado que lleva 2 minutos de inactividad.<br/><br/>
                     🤔 ¿Necesita ayuda? <br/><br/> 
                     💬 Estamos aquí para asistirle. <br/><br/> 
                     👉 Por favor, responda a su última interacción para continuar. 😊</p>`;

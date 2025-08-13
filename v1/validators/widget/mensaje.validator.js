@@ -136,6 +136,20 @@ const vigilaInactividadChat = [
     body('tiempoInactividad')
         .isInt({ min: 0 })
         .withMessage('El campo "tiempoInactividad" debe ser un número entero positivo...'),
+    
+    // todo: Validar campo 'resetearInactividad'
+    body('resetearInactividad')
+        .optional()
+        .isBoolean()
+        .withMessage('El campo "resetearInactividad" debe ser un valor booleano...'),
+];
+
+// * LIMPIAR MENSAJES DE INACTIVIDAD
+const limpiarMensajesInactividad = [
+    // todo: Validar campo 'idChatWeb'
+    body('idChatWeb')
+        .trim()
+        .notEmpty().withMessage('El campo "idChatWeb" no puede estar vacío...'),
 ];
 
 // ! EXPORTACIONES
@@ -147,4 +161,5 @@ module.exports = {
     adjuntarArchivos,
     listarConversacion,
     vigilaInactividadChat,
+    limpiarMensajesInactividad,
 };

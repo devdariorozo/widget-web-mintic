@@ -12,22 +12,28 @@ let idChatWeb = '';
 let inactividadInterval;
 let reintentoInterval; // Declarar fuera para que sea accesible
 var tempText = '';
+let formularioEnviado = false;
 let ultimaActividad = Date.now();
 let tiempoInactividad = 0;
-let formularioEnviado = false;
 let umbralesNotificados = []; // <-- NUEVO: Para llevar registro de umbrales notificados
+let debounceTimeout; // Para evitar múltiples llamadas seguidas
 
 // ! EVENTOS DE ACTIVIDAD
-const eventosActividad = [
-    'mousedown',
+// Eventos que se disparan frecuentemente (necesitan debounce)
+const eventosFrecuentes = [
     'mousemove',
-    'keypress',
     'scroll',
-    'touchstart',
     'touchmove',
+    'pointermove'
+];
+
+// Eventos que se disparan ocasionalmente (no necesitan debounce)
+const eventosOcasionales = [
+    'mousedown',
+    'keypress',
+    'touchstart',
     'touchend',
     'pointerdown',
-    'pointermove',
     'pointerup',
     'click',
     'input',
@@ -526,6 +532,7 @@ async function listarMensajeNoLeido() {
 
         // Mapeo de mensajes
         const mensajes = result.data;
+        
         mensajes.forEach(async (mensaje) => {
             const contentFormTexto = document.getElementById('contentFormTexto');
             const txtMensaje = document.getElementById('txt_mensaje');
@@ -635,18 +642,38 @@ function verificarOpcionesServiciosMostradas() {
     return false;
 }
 
-// ! FUNCIÓN PARA ACTUALIZAR ÚLTIMA ACTIVIDAD
+// ! FUNCIÓN PARA ACTUALIZAR ÚLTIMA ACTIVIDAD (SOLO ACTIVIDAD REAL DEL USUARIO)
 function actualizarUltimaActividad() {
     if (verificarOpcionesServiciosMostradas()) {
-        ultimaActividad = Date.now();
-        tiempoInactividad = 0;
-        umbralesNotificados = [];
+        // Implementar debounce para evitar múltiples llamadas seguidas
+        clearTimeout(debounceTimeout);
+        
+        debounceTimeout = setTimeout(() => {
+            // SIEMPRE resetear cuando hay actividad real del usuario
+            // La actividad del usuario es lo que importa, no el contenido de los mensajes
+            ultimaActividad = Date.now();
+            tiempoInactividad = 0;
+            umbralesNotificados = []; // Limpiar array de umbrales notificados
+        }, 100); // Esperar 100ms antes de procesar la actividad
     }
 }
 
-// ! AGREGAR EVENTOS DE ACTIVIDAD
-eventosActividad.forEach(evento => {
+// ! AGREGAR EVENTOS DE ACTIVIDAD REAL DEL USUARIO
+// Eventos frecuentes (con debounce)
+eventosFrecuentes.forEach(evento => {
     document.addEventListener(evento, actualizarUltimaActividad);
+});
+
+// Eventos ocasionales (sin debounce - respuesta inmediata)
+eventosOcasionales.forEach(evento => {
+    document.addEventListener(evento, () => {
+        if (verificarOpcionesServiciosMostradas()) {
+            // Respuesta inmediata para eventos importantes
+            ultimaActividad = Date.now();
+            tiempoInactividad = 0;
+            umbralesNotificados = [];
+        }
+    });
 });
 
 // * FUNCION PARA VIGILAR LA INACTIVIDAD DEL CHAT
@@ -671,7 +698,7 @@ async function vigilarInactividad() {
         },
         body: JSON.stringify({ 
             idChatWeb,
-            tiempoInactividad: tiempoInactividadMinutos
+            tiempoInactividad: tiempoInactividadMinutos,
         }),
     });
     const result = await response.json();
@@ -712,222 +739,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnEnviar) {
         btnEnviar.addEventListener('click', async () => {
             detenerVigilanciaInactividad();
-            actualizarUltimaActividad(); // Actualizar la última actividad
+            actualizarUltimaActividad(); // Actualizar la última actividad (resetear inactividad)
             iniciarVigilanciaInactividad(); // Reiniciar vigilancia después de enviar el mensaje
         });
     }
 });
-
-// ! VALIDACION CAMPOS Y CONTROL VISUAL FORMULARIO
-// * VALIDACION CAMPOS
-// todo: validacion campo tipo grupo
-async function valida_txt_tipoGrupo() {
-    const txt_tipoGrupo = document.getElementById('txt_tipoGrupo');
-    const txt_tipoGrupo_value = txt_tipoGrupo.value.trim();
-
-    if (!txt_tipoGrupo_value) {
-        campoInvalido(txt_tipoGrupo, 'Por favor complete este campo...', true);
-    } else if (txt_tipoGrupo_value.length < 1 || txt_tipoGrupo_value.length > 44) {
-        campoInvalido(txt_tipoGrupo, 'Este valor no es valido...', true);
-    } else {
-        campoValido(txt_tipoGrupo);
-    }
-}
-
-// todo: validacion campo Nombres
-async function valida_txt_nombres() {
-    const txt_nombres = document.getElementById('txt_nombres');
-    let txt_nombres_value = txt_nombres.value;
-
-    // * Letra capital intercalada (solo letras y caracteres especiales del español)
-    const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+$/;
-    if (regex.test(txt_nombres_value)) {
-        txt_nombres_value = txt_nombres_value.toLowerCase().replace(/^(.)|\s(.)/g, function ($1) {
-            return $1.toUpperCase();
-        });
-        txt_nombres.value = txt_nombres_value;
-    } else {
-        txt_nombres.value = txt_nombres_value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+/g, "")
-    }
-
-    // * Validación si está vacío
-    if (!txt_nombres_value) {
-        campoInvalido(txt_nombres, 'Por favor complete este campo...', true);
-    } else if (txt_nombres_value.length < 3 || txt_nombres_value.length > 44) {
-        campoInvalido(txt_nombres, 'Este valor no es valido...', true);
-    } else {
-        campoValido(txt_nombres);
-    }
-}
-
-// todo: validacion campo Apellidos
-async function valida_txt_apellidos() {
-    const txt_apellidos = document.getElementById('txt_apellidos');
-    let txt_apellidos_value = txt_apellidos.value;
-
-    // * Letra capital intercalada (solo letras y caracteres especiales del español)
-    const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+$/;
-    if (regex.test(txt_apellidos_value)) {
-        txt_apellidos_value = txt_apellidos_value.toLowerCase().replace(/^(.)|\s(.)/g, function ($1) {
-            return $1.toUpperCase();
-        });
-        txt_apellidos.value = txt_apellidos_value;
-    } else {
-        txt_apellidos.value = txt_apellidos_value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+/g, "")
-    }
-
-    // * Validación si está vacío
-    if (!txt_apellidos_value) {
-        campoInvalido(txt_apellidos, 'Por favor complete este campo...', true);
-    } else if (txt_apellidos_value.length < 3 || txt_apellidos_value.length > 44) {
-        campoInvalido(txt_apellidos, 'Este valor no es valido...', true);
-    } else {
-        campoValido(txt_apellidos);
-    }
-}
-
-// todo: validacion campo Número de cédula
-async function valida_txt_numeroCedula() {
-    const txt_numeroCedula = document.getElementById('txt_numeroCedula');
-    let txt_numeroCedula_value = txt_numeroCedula.value;
-
-    // Solo acepta números y elimina cualquier otro carácter
-    txt_numeroCedula_value = txt_numeroCedula_value.replace(/[^0-9]/g, '');
-    txt_numeroCedula.value = txt_numeroCedula_value;
-
-    // Validación si está vacío
-    if (!txt_numeroCedula_value) {
-        campoInvalido(txt_numeroCedula, 'Por favor complete este campo...', true);
-    } else if (/(\d)\1{3,}/.test(txt_numeroCedula_value)) {
-        campoInvalido(txt_numeroCedula, 'Este valor no es valido...', true);
-    } else if (txt_numeroCedula_value.length < 5) {
-        campoInvalido(txt_numeroCedula, 'El número de cédula debe tener al menos 5 dígitos...', true);
-    } else if (txt_numeroCedula_value.length > 12) {
-        campoInvalido(txt_numeroCedula, 'El número de cédula no puede tener más de 11 dígitos...', true);
-    } else {
-        campoValido(txt_numeroCedula);
-    }
-}
-
-// todo: validacion campo País Residencia
-async function valida_txt_paisResidencia() {
-    const txt_paisResidencia = document.getElementById('txt_paisResidencia');
-    const txt_paisResidencia_value = txt_paisResidencia.value.trim();
-
-    if (!txt_paisResidencia_value) {
-        campoInvalido(txt_paisResidencia, 'Por favor complete este campo...', true);
-    } else if (txt_paisResidencia_value.length < 1 || txt_paisResidencia_value.length > 44) {
-        campoInvalido(txt_paisResidencia, 'Este valor no es valido...', true);
-    } else {
-        campoValido(txt_paisResidencia);
-    }
-}
-
-// todo: validacion campo Ciudad Residencia
-async function valida_txt_ciudadResidencia() {
-    const txt_ciudadResidencia = document.getElementById('txt_ciudadResidencia');
-    let txt_ciudadResidencia_value = txt_ciudadResidencia.value;
-
-    // * Letra capital intercalada (solo letras y caracteres especiales del español)
-    const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+$/;
-    if (regex.test(txt_ciudadResidencia_value)) {
-        txt_ciudadResidencia_value = txt_ciudadResidencia_value.toLowerCase().replace(/^(.)|\s(.)/g, function ($1) {
-            return $1.toUpperCase();
-        });
-        txt_ciudadResidencia.value = txt_ciudadResidencia_value;
-    } else {
-        txt_ciudadResidencia.value = txt_ciudadResidencia_value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s]+/g, "")
-    }
-
-    // * Validación si está vacío
-    if (!txt_ciudadResidencia_value) {
-        campoInvalido(txt_ciudadResidencia, 'Por favor complete este campo...', true);
-    } else if (txt_ciudadResidencia_value.length < 3 || txt_ciudadResidencia_value.length > 44) {
-        campoInvalido(txt_ciudadResidencia, 'Este valor no es valido...', true);
-    } else {
-        campoValido(txt_ciudadResidencia);
-    }
-}
-
-// todo: validacion campo Indicativo país
-async function valida_txt_indicativoPais() {
-    const txt_indicativoPais = document.getElementById('txt_indicativoPais');
-    let txt_indicativoPais_value = txt_indicativoPais.value;
-
-    // * Solo acepta números y el símbolo +
-    txt_indicativoPais_value = txt_indicativoPais_value.replace(/[^0-9+]/g, '');
-    
-    // * Asegurar que comience con +
-    if (!txt_indicativoPais_value.startsWith('+')) {
-        txt_indicativoPais_value = '+' + txt_indicativoPais_value.replace(/\+/g, '');
-    }
-    
-    // * Actualizar el valor en el campo
-    txt_indicativoPais.value = txt_indicativoPais_value;
-
-    // * Validación si está vacío o solo tiene el +
-    if (!txt_indicativoPais_value || txt_indicativoPais_value === '+') {
-        campoInvalido(txt_indicativoPais, 'Por favor complete este campo...', true);
-    } else if (txt_indicativoPais_value.length < 2 || txt_indicativoPais_value.length > 10) {
-        campoInvalido(txt_indicativoPais, 'El indicativo debe tener entre 2 y 10 dígitos después del +...', true);
-    } else {
-        campoValido(txt_indicativoPais);
-    }
-}
-
-// todo: validacion campo Número de celular
-async function valida_txt_numeroCelular() {
-    const txt_numeroCelular = document.getElementById('txt_numeroCelular');
-    let txt_numeroCelular_value = txt_numeroCelular.value;
-
-    // * Solo acepta números
-    txt_numeroCelular_value = txt_numeroCelular_value.replace(/[^0-9]/g, '');
-    txt_numeroCelular.value = txt_numeroCelular_value;
-
-    // * Validación si está vacío
-    if (!txt_numeroCelular_value) {
-        campoInvalido(txt_numeroCelular, 'Por favor complete este campo...', true);
-    } else if (txt_numeroCelular_value.length < 10 || txt_numeroCelular_value.length > 15) {
-        campoInvalido(txt_numeroCelular, 'El número de celular debe tener entre 10 y 15 dígitos...', true);
-    } else {
-        campoValido(txt_numeroCelular);
-    }
-}
-
-// todo: validacion campo Correo electrónico
-async function valida_txt_correoElectronico() {
-    const txt_correoElectronico = document.getElementById('txt_correoElectronico');
-    let txt_correoElectronico_value = txt_correoElectronico.value;
-
-    // * Validación si está vacío
-    if (!txt_correoElectronico_value) {
-        campoInvalido(txt_correoElectronico, 'Por favor complete este campo...', true);
-    } else {
-        // Validar formato de correo y evitar dos puntos seguidos
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const hasConsecutiveDots = /\.{2,}/.test(txt_correoElectronico_value);
-        
-        if (hasConsecutiveDots) {
-            campoInvalido(txt_correoElectronico, 'El correo electrónico no puede contener dos puntos seguidos...', true);
-        } else if (!emailRegex.test(txt_correoElectronico_value)) {
-            campoInvalido(txt_correoElectronico, 'El correo electrónico no es válido...', true);
-        } else {
-            campoValido(txt_correoElectronico);
-        }
-    }
-}
-
-// Agregar función de validación para el checkbox
-async function valida_txt_autorizacionDatosPersonales() {
-    const checkbox = document.getElementById('autorizacionDatosPersonales');
-    if (!checkbox.checked) {
-        checkboxInvalido(checkbox, 'Debe aceptar los términos y condiciones...');
-        return false;
-    } else {
-        checkboxValido(checkbox);
-        return true;
-    }
-}
 
 async function listarConversacionCompleta() {
     try {
@@ -997,6 +813,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Agregar evento de scroll al contenedor de la conversación (para móviles y contenedores con overflow)
     const conversacionDiv = document.getElementById('conversacion');
     if (conversacionDiv) {
-        conversacionDiv.addEventListener('scroll', actualizarUltimaActividad);
+        conversacionDiv.addEventListener('scroll', () => {
+            // Solo actualizar la última actividad sin resetear el tiempo de inactividad
+            // Esto se usa para eventos que NO indican actividad real del usuario
+            // como scroll automático, mensajes del servidor, etc.
+            // No hacer nada - mantener el timestamp original
+        });
+    }
+    
+    // Agregar evento para cuando se reciba un mensaje del servidor
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // Verificar si se agregó un nuevo mensaje
+                const nuevoMensaje = mutation.addedNodes[0];
+                if (nuevoMensaje.nodeType === Node.ELEMENT_NODE && 
+                    (nuevoMensaje.classList.contains('mensaje-recibido') || 
+                     nuevoMensaje.classList.contains('mensaje-enviado'))) {
+                    // Si es un mensaje recibido del servidor, actualizar la actividad sin resetear inactividad
+                    if (nuevoMensaje.classList.contains('mensaje-recibido')) {
+                        // No hacer nada - mantener el timestamp original
+                    }
+                }
+            }
+        });
+    });
+    
+    if (conversacionDiv) {
+        observer.observe(conversacionDiv, { childList: true, subtree: true });
     }
 });
