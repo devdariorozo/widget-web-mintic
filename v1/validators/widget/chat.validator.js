@@ -141,8 +141,8 @@ const cerrar = [
         .notEmpty().withMessage('El campo "idChatWeb" no puede estar vacío...'),
 ];
 
-// * CERRAR CHAT AI
-const cerrarChatAI = [
+// * CERRAR CHAT DESDE SOUL CHAT
+const cerrarSoulChat = [
     // todo: Validar campo 'idChat'
     body('idChat')
         .trim()
@@ -206,5 +206,5 @@ module.exports = {
     listarArchivosAdjuntos,
     filtrar,
     cerrar,
-    cerrarChatAI,
+    cerrarSoulChat,
 };

@@ -24,8 +24,8 @@ const crear = [
         .notEmpty().withMessage('El campo "mensaje" no puede estar vacío...'),
 ];
 
-// * CREAR MENSJAJE SOUL CHAT
-const crearRespuestaAI = [
+// * CREAR MENSJAJE DESDE SOUL CHAT
+const crearSoulChat = [
     // todo: Vallidar campo 'idChat'
     body('idChat')
         .trim()
@@ -155,7 +155,7 @@ const limpiarMensajesInactividad = [
 // ! EXPORTACIONES
 module.exports = { 
     crear,
-    crearRespuestaAI,
+    crearSoulChat,
     listarNoLeido,
     leer,
     adjuntarArchivos,

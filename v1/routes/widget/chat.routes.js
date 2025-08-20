@@ -50,9 +50,9 @@ router.get('/filtrar', validator.filtrar, controller.filtrar);
 // TODO: CERRAR
 router.post('/cerrar', validator.cerrar, controller.cerrar);
 
-// * CERRAR CHAT AI
-// TODO: CERRAR CHAT AI
-router.post('/cerrarChatAI', validator.cerrarChatAI, controller.cerrarChatAI);
+// * CERRAR CHAT DESDE SOUL CHAT
+// TODO: CERRAR CHAT DESDE SOUL CHAT
+router.post('/cerrarSoulChat', validator.cerrarSoulChat, controller.cerrarSoulChat);
 
 // ! EXPORTACIONES
 module.exports = router;

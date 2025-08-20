@@ -106,7 +106,7 @@ docker compose down -v --remove-orphans
 ## Instalación
 
 ```bash
-    1.  Clonar repositorio (https://dev.azure.com/MontecheloPipelines/ThomasGreg/_git/Widget_WEB_%20ThomasGreg_Sons).
+    1.  Clonar repositorio (https://dev.azure.com/MontecheloPipelines/_git/MinTIC).
 
     2.  Entrar a la carpeta raiz del proyecto.
 
@@ -312,7 +312,7 @@ docker compose down -v --remove-orphans
             <head>
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>Document</title>
+            <title>Widget Mintic Dev</title>
             <!--Import Google Icon Font-->
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -326,7 +326,7 @@ docker compose down -v --remove-orphans
                 }
 
                 body {
-                background-image: url('https://owns-portrait-fiction-lose.trycloudflare.com/images/imagen-corporativa/fondo.png');
+                background-image: url('http://localhost:5002/images/imagen-corporativa/fondo.png');
                 /* Llama a la imagen de fondo */
                 background-repeat: no-repeat;
                 /* No repetir la imagen */
@@ -342,7 +342,7 @@ docker compose down -v --remove-orphans
 
             <body>
 
-            <div class="titlePagina" style="background: #0300a763; height: 8%;">
+            <div class="titlePagina" style="background: #0b06ff; height: 8%; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
                 <h1 style="text-align: center; margin: 0rem; color: rgb(255, 255, 255);"><strong>Pagina de prueba DEV - Widget / Chat Web MinTic</strong></h1>
             </div>
 
@@ -526,16 +526,16 @@ docker compose down -v --remove-orphans
 
 ```bash
     1.  Ambiente de pruebas
-            https://demothomasgregysons.rpagroupcos.com
+            https://demoXXXXXXXXXXXXXX.com
 
         Monitor
-            https://demothomasgregysons.rpagroupcos.com/widget/chat/monitor
+            https://demoXXXXXXXXXXXXXX.com/widget/chat/monitor
 
     2.  Ambiente de produccion
-            https://thomasgregysons.rpagroupcos.com
+            https://XXXXXXXXXXXXXX.com
 
         Monitor    
-            https://thomasgregysons.rpagroupcos.com/widget/chat/monitor
+            https://XXXXXXXXXXXXXX.com/widget/chat/monitor
 
 ```
 

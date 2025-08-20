@@ -30,8 +30,8 @@ const upload = multer({ storage: storage });
 // TODO: CREAR MENSAJE
 router.post('/crear', validator.crear, controller.crear);
 
-// TODO: CREAR RESPUESTA AI
-router.post('/crearRespuestaAI', validator.crearRespuestaAI, controller.crearRespuestaAI);
+// TODO: CREAR MENSAJE DESDE SOUL CHAT
+router.post('/crearSoulChat', validator.crearSoulChat, controller.crearSoulChat);
 
 // TODO: LISTAR MENSAJE NO LEÍDOS
 router.get('/listarNoLeido', validator.listarNoLeido, controller.listarNoLeido);

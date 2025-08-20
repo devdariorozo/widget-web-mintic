@@ -465,8 +465,8 @@ const cerrar = async (req, res) => {
     }
 };
 
-// * CERRAR CHAT AI
-const cerrarChatAI = async (req, res) => {
+// * CERRAR CHAT DESDE SOUL CHAT
+const cerrarSoulChat = async (req, res) => {
     try {
         // todo: Validar los datos
         const errors = validationResult(req);
@@ -493,7 +493,7 @@ const cerrarChatAI = async (req, res) => {
         } = req.body;
 
         // todo: Cerrar el chat
-        const result = await model.cerrarChatAI(remitente, estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable);
+        const result = await model.cerrarSoulChat(remitente, estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable);
 
         // todo: Enviar respuesta
         if (result) {
@@ -520,7 +520,7 @@ const cerrarChatAI = async (req, res) => {
         }
 
     } catch (error) {
-        console.log('❌ Error en v1/controllers/widget/chat.controller.js → cerrar ', error);
+        console.log('❌ Error en v1/controllers/widget/chat.controller.js → cerrarSoulChat ', error);
         res.status(500).json({
             status: 500,
             type: 'error',
@@ -540,5 +540,5 @@ module.exports = {
     listarArchivosAdjuntos,
     filtrar,
     cerrar,
-    cerrarChatAI,
+    cerrarSoulChat,
 };

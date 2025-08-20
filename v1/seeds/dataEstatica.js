@@ -260,7 +260,7 @@ const estadoRegistro = {
 };
 
 // * RESPONSABLE
-const responsable = 'Chat Web Ministerio TIC';
+const responsable = 'Chat Web MinTic';
 
 // ! EXPORTACIONES ORGANIZADAS POR CATEGORÍAS
 module.exports = {

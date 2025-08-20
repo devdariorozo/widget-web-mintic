@@ -106,25 +106,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             { data: "CONTROL_API" }, //7
             { data: "CONTROL_PETICIONES" }, //8
             { data: "RESULTADO_API" }, //9
-            { data: "NOMBRES" }, //10
-            { data: "APELLIDOS" }, //11
-            { data: "NUMERO_CEDULA" }, //12
-            { data: "PAIS_RESIDENCIA" }, //13
-            { data: "CIUDAD_RESIDENCIA" }, //14
-            { data: "INDICATIVO_PAIS" }, //15
-            { data: "NUMERO_CELULAR" }, //16
-            { data: "CORREO_ELECTRONICO" }, //17
-            { data: "AUTORIZACION_DATOS_PERSONALES" }, //18
-            { data: "ADJUNTOS" }, //19
-            { data: "RUTA_ADJUNTOS" }, //20
-            { data: "DESCRIPCION" }, //21
-            { data: "REGISTRO" }, //22
-            { data: "FECHA_ACTUALIZACION" }, //23
-            { data: "RESPONSABLE" } //24
+            { data: "SERVICIO" }, //10
+            { data: "AUTORIZACION_DATOS_PERSONALES" }, //11
+            { data: "TIPO_DOCUMENTO" }, //12
+            { data: "NUMERO_DOCUMENTO" }, //13
+            { data: "NOMBRE_COMPLETO" }, //14
+            { data: "SEXO" }, //15
+            { data: "CONTACTO" }, //16
+            { data: "CORREO" }, //17
+            { data: "CIUDAD_MUNICIPIO" }, //18
+            { data: "CANAL_ATENCION" }, //19
+            { data: "ADJUNTOS" }, //20
+            { data: "RUTA_ADJUNTOS" }, //21
+            { data: "DESCRIPCION" }, //22
+            { data: "REGISTRO" }, //23
+            { data: "FECHA_ACTUALIZACION" }, //24
+            { data: "RESPONSABLE" } //25
         ],
         columnDefs: [
             {
-                targets: [2, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // Condiciono las columnas apiladas
+                targets: [2, 4, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], // Condiciono las columnas apiladas
                 className: 'none'
             },
         ],
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             {
                 extend: 'copyHtml5',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
                     modifier: {
                         page: 'all'  // Exportar todos los registros
                     }
@@ -143,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
                     modifier: {
                         page: 'all' // Exportar todos los registros
                     }
@@ -170,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fieldBoundary: '',
                 extension: '.txt',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
                     modifier: {
                         page: 'all' // Exportar todos los registros
                     }

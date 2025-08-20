@@ -456,8 +456,8 @@ const cerrar = async (remitente, estadoChat, estadoGestion, arbol, controlApi, d
     }
 };
 
-// * CERRAR CHAT AI
-const cerrarChatAI = async (remitente, estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable) => {
+// * CERRAR CHAT DESDE SOUL CHAT
+const cerrarSoulChat = async (remitente, estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable) => {
     try {
         // todo: Sentencia SQL
         const query = `
@@ -477,21 +477,24 @@ const cerrarChatAI = async (remitente, estadoChat, estadoGestion, arbol, control
 
         // todo: Ejecutar la sentencia y retornar respuesta
         const result = await pool.query(query, [estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable, remitente]);
+        
         // todo: Si se modifico el registro
         if (result[0].affectedRows > 0) {
             // todo: Retornar el id del registro
             const query = `
                 SELECT
                     cht_id AS ID_CHAT
-            WHERE
-                cht_remitente = ?;
+                FROM
+                    tbl_chat
+                WHERE
+                    cht_remitente = ?;
             `;
             const [rows] = await pool.query(query, [remitente]);
             return rows;
         }
     } catch (error) {
         // todo: Capturar el error
-        console.log('❌ Error en v1/models/widget/chat.model.js → cerrarChatAI ', error);
+        console.log('❌ Error en v1/models/widget/chat.model.js → cerrarSoulChat ', error);
         return false;
     }
 };
@@ -509,5 +512,5 @@ module.exports = {
     listarArchivosAdjuntos,
     actualizar,
     cerrar,
-    cerrarChatAI,
+    cerrarSoulChat,
 };

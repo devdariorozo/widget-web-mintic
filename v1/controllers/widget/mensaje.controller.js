@@ -100,8 +100,8 @@ const crear = async (req, res) => {
     }
 };
 
-// * CREAR RESPUESTA AI
-const crearRespuestaAI = async (req, res) => {
+// * CREAR MENSAJE DESDE SOUL CHAT
+const crearSoulChat = async (req, res) => {
     try {
         // todo: Validar los datos
         const errors = validationResult(req);
@@ -142,7 +142,7 @@ const crearRespuestaAI = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log('❌ Error en v1/controllers/widget/mensaje.controller.js → crear ', error);
+        console.log('❌ Error en v1/controllers/widget/mensaje.controller.js → crearSoulChat ', error);
         res.status(500).json({
             status: 500,
             type: 'error',
@@ -487,7 +487,7 @@ const vigilaInactividadChat = async (req, res) => {
 // ! EXPORTACIONES
 module.exports = {
     crear,
-    crearRespuestaAI,
+    crearSoulChat,
     listarNoLeido,
     leer,
     adjuntarArchivos,
