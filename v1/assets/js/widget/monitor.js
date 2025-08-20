@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         page: 'all' // Exportar todos los registros
                     }
                 },
-                filename: 'Reporte Widget Thomas Greg y Sons',
+                filename: 'Reporte Widget MinTic',
                 charset: 'utf-8'
             },
             {
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 },
                 bom: true,
-                filename: 'Reporte Widget Thomas Greg y Sons',
+                filename: 'Reporte Widget MinTic',
                 charset: 'utf-8'
             },
             {
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 },
                 bom: true,
-                filename: 'Reporte Widget Thomas Greg y Sons',
+                filename: 'Reporte Widget MinTic',
                 charset: 'utf-8'
             }
         ],

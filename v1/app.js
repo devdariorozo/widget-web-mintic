@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 
 // ! MIDDLEWARES
 // * MIDDLEWARE MORGAN PARA REGISTRAR SOLICITUDES HTTP
-app.use(morgan('■ Thomas Greg y Sons :localdate → :method → :status • :url → :response-time ms'));
+app.use(morgan('■ MinTic :localdate → :method → :status • :url → :response-time ms'));
 // * MIDDLEWARE PARA ACEPTAR DATOS EN FORMATO JSON
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
