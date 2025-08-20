@@ -275,7 +275,22 @@ v1/
 - `POST /widget/chat/cerrarSoulChat` - Cerrar chat desde Soul Chat
 
 ### Widget Mensaje
-- Endpoints para gestión de mensajes del chat
+- `POST /widget/mensaje/crear` - Crear nuevo mensaje en un chat
+- `POST /widget/mensaje/crearSoulChat` - Crear mensaje desde Soul Chat
+- `GET /widget/mensaje/listarNoLeido` - Listar mensajes no leídos de un chat
+- `POST /widget/mensaje/leer` - Marcar mensaje como leído
+- `POST /widget/mensaje/adjuntarArchivos` - Adjuntar archivos a un mensaje (máximo 5 archivos)
+- `GET /widget/mensaje/listarConversacion` - Listar conversación completa de un chat
+- `POST /widget/mensaje/vigilaInactividadChat` - Vigilar inactividad del chat
+
+### 🔄 **Flujo de Trabajo Típico**
+
+1. **Crear Chat**: `POST /widget/chat/crear`
+2. **Enviar Mensaje**: `POST /widget/mensaje/crear`
+3. **Adjuntar Archivos**: `POST /widget/mensaje/adjuntarArchivos`
+4. **Listar Conversación**: `GET /widget/mensaje/listarConversacion`
+5. **Monitorear**: `POST /widget/chat/monitor`
+6. **Cerrar Chat**: `POST /widget/chat/cerrar`
 
 ## 🎯 Módulos y Funcionalidades
 
