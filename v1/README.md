@@ -425,33 +425,117 @@ Para integrar el widget en sitios web externos:
 
 #### 3. Script de Carga del Widget
 ```html
-<script>
+<!-- Import js y css -->
+  <script>
     // Definición de constantes para las URLs
-    const URL_BASE = 'APP_URL';
+    const URL_BASE = 'http://localhost:5002';
     const URL_CSS = `${URL_BASE}/chatWeb.css`;
     const URL_JS = `${URL_BASE}/chatWeb.js`;
 
     // Función para cargar con timeout
     function cargarConTimeout(cargarFn, src, timeout = 1500) {
-        // ... código de carga con timeout
+      return new Promise((resolve, reject) => {
+        let el;
+        const timer = setTimeout(() => {
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+          reject(new Error('Timeout al cargar: ' + src));
+        }, timeout);
+
+        cargarFn(src)
+          .then(() => {
+            clearTimeout(timer);
+            resolve();
+          })
+          .catch((err) => {
+            clearTimeout(timer);
+            reject(err);
+          });
+
+        // Guardar el elemento para poder removerlo si hay timeout
+        if (cargarFn === cargarCSS) {
+          el = document.querySelector(`link[href='${src}']`);
+        }
+        if (cargarFn === cargarJS) {
+          el = document.querySelector(`script[src='${src}']`);
+        }
+      });
+    }
+
+    // Funcion para cargar el css
+    function cargarCSS(src) {
+      return new Promise((resolve, reject) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = src;
+        link.onload = resolve;
+        link.onerror = reject;
+        document.head.appendChild(link);
+        // Devuelve el elemento para poder removerlo si hay timeout
+        resolve.el = link;
+      });
+    }
+
+    // Funcion para cargar el js
+    function cargarJS(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
     }
 
     // Carga con timeout de 3 segundos
     cargarConTimeout(cargarCSS, URL_CSS, 1500)
-        .then(() => cargarConTimeout(cargarJS, URL_JS, 1500))
-        .then(() => {
-            if (window.WidgetChat && typeof window.WidgetChat.init === 'function' && document.getElementById('contenedorWidget')) {
+      .then(() => cargarConTimeout(cargarJS, URL_JS, 1500))
+      .then(() => {
+        if (window.WidgetChat && typeof window.WidgetChat.init === 'function' && document.getElementById('contenedorWidget')) {
+          window.WidgetChat.init();
+          console.log('✅ Widget cargado exitosamente');
+        } else {
+          console.error('❌ El widget o el contenedor no están disponibles.');
+        }
+      })
+      .catch((error) => {
+        console.error('❌ Error al cargar recursos del widget, por favor contactenos:', error);
+        
+        // Configuración de reintentos
+        const intervaloReintento = 15000; // 15 segundos
+        const tiempoMaximo = 300000; // 5 minutos
+        const tiempoInicio = Date.now();
+        
+        // Funcion para intentar cargar nuevamente los recursos
+        function intentarCarga() {
+          const tiempoTranscurrido = Date.now() - tiempoInicio;
+          
+          if (tiempoTranscurrido >= tiempoMaximo) {
+            console.error('❌ Tiempo máximo de reintentos alcanzado');
+            return;
+          }
+          
+          console.log('🔄 Reintentando cargar el widget...');
+          
+          cargarConTimeout(cargarCSS, URL_CSS, 1500)
+            .then(() => cargarConTimeout(cargarJS, URL_JS, 1500))
+            .then(() => {
+              if (window.WidgetChat && typeof window.WidgetChat.init === 'function' && document.getElementById('contenedorWidget')) {
                 window.WidgetChat.init();
                 console.log('✅ Widget cargado exitosamente');
-            } else {
-                console.error('❌ El widget o el contenedor no están disponibles.');
-            }
-        })
-        .catch((error) => {
-            console.error('❌ Error al cargar recursos del widget:', error);
-            // Sistema de reintentos automático
-        });
-</script>
+              } else {
+                throw new Error('El widget o el contenedor no están disponibles');
+              }
+            })
+            .catch((error) => {
+              console.error('❌ Error en reintento:', error);
+              setTimeout(intentarCarga, intervaloReintento);
+            });
+        }
+        
+        // Iniciar el primer reintento
+        setTimeout(intentarCarga, intervaloReintento);
+      });
+  </script>
 ```
 
 ### Consideraciones de Implementación
