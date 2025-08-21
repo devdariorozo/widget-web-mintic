@@ -215,7 +215,11 @@ v1/
 ├── Dockerfile                # Configuración de contenedor Docker
 ├── docker-compose.yml        # Orquestación de servicios Docker
 ├── .dockerignore             # Archivos ignorados por Docker
+├── widget_chat_web_mintic_dev.html    # Archivo HTML para ambiente DEV
+├── widget_chat_web_mintic_qa.html     # Archivo HTML para ambiente QA
+├── widget_chat_web_mintic_pro.html    # Archivo HTML para ambiente PROD
 ├── config/                   # Configuraciones (base de datos, etc.)
+│   ├── database.js           # Configuración de conexión a base de datos
 │   └── .gitkeep
 ├── controllers/              # Controladores de la API (Backend)
 │   └── widget/               # Controladores del widget
@@ -229,21 +233,44 @@ v1/
 │   └── .gitkeep
 ├── migrations/               # Scripts de migración de base de datos
 │   ├── 2025_01_24_create_database.sql # Creación de base de datos
-│   └── .gitkeep
+│   └── widget/               # Migraciones específicas del widget
+│       ├── chat/             # Migraciones de chat
+│       │   ├── 2025_01_24_create_tbl_chat.sql # Tabla principal de chat
+│       │   ├── 2025_01_24_create_tbl_historico_chat.sql # Tabla histórica de chat
+│       │   ├── 2025_01_24_create_triggers_tbl_chat.sql # Triggers de chat
+│       │   └── .gitkeep
+│       ├── mensaje/          # Migraciones de mensajes
+│       │   ├── 2025_01_24_create_tbl_mensaje.sql # Tabla principal de mensajes
+│       │   ├── 2025_01_24_create_tbl_historico_mensaje.sql # Tabla histórica de mensajes
+│       │   ├── 2025_01_24_create_triggers_tbl_mensaje.sql # Triggers de mensajes
+│       │   └── .gitkeep
+│       └── .gitkeep
 ├── models/                   # Modelos de datos (Backend)
-│   └── .gitkeep
+│   └── widget/               # Modelos del widget
+│       ├── arbolChatBot.model.js # Modelo del árbol de chatbot
+│       ├── chat.model.js     # Modelo del chat
+│       ├── mensaje.model.js  # Modelo de mensajes
+│       └── .gitkeep
 ├── routes/                   # Definición de rutas de la API (Backend)
 │   └── widget/               # Rutas del widget
 │       ├── chat.routes.js    # Rutas del chat
 │       ├── mensaje.routes.js # Rutas de mensajes
 │       └── .gitkeep
 ├── seeds/                    # Datos iniciales
-│   └── .gitkeep
+│   ├── dataEstatica.js       # Configuración estática del sistema
+│   └── widget/               # Seeds específicos del widget
+│       └── .gitkeep
 ├── services/                 # Lógica de negocio (Backend)
+│   ├── serviceSoulChat.service.js # Servicio de integración con Soul Chat
 │   └── .gitkeep
-├── uploads/                  # Archivos subidos
+├── uploads/                  # Archivos subidos por usuarios
 │   └── .gitkeep
 ├── utils/                    # Utilidades (encriptación, etc.)
+│   ├── cryptoData.js         # Cifrado y descifrado de datos
+│   ├── cryptoEnv.js          # Encriptación de variables de entorno
+│   ├── decryptEnv.js         # Desencriptación de variables de entorno
+│   ├── migrateToPlainEnv.js  # Migración a archivo .env plano
+│   ├── timeUtils.js          # Utilidades de manejo de tiempo
 │   └── .gitkeep
 ├── validators/               # Validadores de entrada (Backend)
 │   └── widget/               # Validadores del widget
@@ -251,8 +278,52 @@ v1/
 │       ├── mensaje.validator.js # Validadores de mensajes
 │       └── .gitkeep
 ├── views/                    # Plantillas Handlebars (Frontend)
+│   ├── layouts/              # Layouts principales
+│   │   ├── main.hbs          # Layout principal de la aplicación
+│   │   └── .gitkeep
+│   ├── partials/             # Componentes reutilizables
+│   │   └── .gitkeep
+│   ├── widget/               # Vistas del widget
+│   │   ├── chat.hbs          # Vista principal del chat
+│   │   ├── monitor.hbs       # Vista del monitor de chats
+│   │   └── .gitkeep
 │   └── .gitkeep
 ├── assets/                   # Archivos estáticos (Frontend)
+│   ├── css/                  # Hojas de estilo
+│   │   ├── app.css           # Estilos principales de la aplicación
+│   │   ├── materialize.css   # Framework CSS Materialize
+│   │   ├── style.css         # Estilos personalizados
+│   │   ├── vendors.min.css   # CSS de librerías externas
+│   │   ├── widget/           # Estilos específicos del widget
+│   │   └── .gitkeep
+│   ├── js/                   # Scripts JavaScript
+│   │   ├── app.js            # Aplicación principal JavaScript
+│   │   ├── materialize.js    # Framework JavaScript Materialize
+│   │   ├── plugins.js        # Plugins personalizados
+│   │   ├── search.js         # Funcionalidad de búsqueda
+│   │   ├── vendor.js         # Librerías JavaScript
+│   │   ├── vendors.min.js    # Librerías JavaScript minificadas
+│   │   ├── widget/           # Scripts específicos del widget
+│   │   └── .gitkeep
+│   ├── images/               # Imágenes y recursos gráficos
+│   │   ├── imagen-corporativa/ # Imágenes corporativas del sistema
+│   │   │   ├── fondo.png     # Imagen de fondo
+│   │   │   ├── favicon.png   # Icono del sistema
+│   │   │   ├── logo_sistema.svg # Logo principal
+│   │   │   ├── logo_sistema_sm.svg # Logo pequeño
+│   │   │   ├── soporte.png   # Imagen de soporte
+│   │   │   ├── usuario_chat.png # Imagen de usuario del chat
+│   │   │   ├── usuario_sistema.png # Imagen de usuario del sistema
+│   │   │   ├── widget.png    # Imagen del widget
+│   │   │   └── imagen_corporativa.pptx # Presentación corporativa
+│   │   ├── server/           # Imágenes del servidor
+│   │   └── .gitkeep
+│   ├── fonts/                # Fuentes tipográficas
+│   │   └── .gitkeep
+│   ├── libs/                 # Librerías externas
+│   │   └── .gitkeep
+│   ├── languages/            # Archivos de idiomas
+│   │   └── .gitkeep
 │   └── .gitkeep
 └── widget/                   # Archivos del widget (Frontend)
     ├── chatWeb.css           # Estilos del widget
