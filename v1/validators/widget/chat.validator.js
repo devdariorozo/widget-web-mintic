@@ -152,49 +152,7 @@ const cerrarSoulChat = [
     // todo: Validar campo 'remitente'
     body('remitente')
         .trim()
-        .notEmpty().withMessage('El campo "remitente" no puede estar vacío...'),
-
-    // todo: Validar campo 'estadoChat'
-    body('estadoChat')
-        .trim()
-        .notEmpty().withMessage('El campo "Estado Chat" no puede estar vacío...')
-        .isIn(['Recibido']).withMessage('El campo "Estado Chat" debe ser "Recibido".'),
-
-    // todo: Validar campo 'estadoGestion'
-    body('estadoGestion')
-        .trim()
-        .notEmpty().withMessage('El campo "Estado Gestión" no puede estar vacío...')
-        .isIn(['Cerrado']).withMessage('El campo "Estado Gestión" debe ser "Cerrado".'),
-
-    // todo: Validar campo 'arbol'
-    body('arbol')
-        .trim()
-        .notEmpty().withMessage('El campo "Arbol" no puede estar vacío...')
-        .isIn(['Despedida']).withMessage('El campo "Arbol" debe ser "Despedida".'),
-
-    // todo: Validar campo 'controlApi'
-    body('controlApi')
-        .trim()
-        .notEmpty().withMessage('El campo "Control API" no puede estar vacío...')
-        .isIn(['Success']).withMessage('El campo "Control API" debe ser "Success".'),
-
-    // todo: Validar campo 'descripcion'
-    body('descripcion')
-        .trim()
-        .notEmpty().withMessage('El campo "Descripción" no puede estar vacío...'),
-
-    // todo: Validar campo 'estadoRegistro'
-    body('estadoRegistro')
-        .trim()
-        .notEmpty().withMessage('El campo "Estado Registro" no puede estar vacío...')
-        .isIn(['Activo']).withMessage('El campo "Estado Registro" debe ser "Activo".'),
-
-    // todo: Validar campo 'responsable'
-    body('responsable')
-        .trim()
-        .notEmpty().withMessage('El campo "Responsable" no puede estar vacío...')
-        .isIn(['Chat Web MinTic']).withMessage('El campo "Responsable" debe ser "Chat Web MinTic".'),
-
+        .notEmpty().withMessage('El campo "remitente" no puede estar vacío...')
 ];
 
 // ! EXPORTACIONES

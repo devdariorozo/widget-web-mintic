@@ -223,8 +223,13 @@ const arbolChatBot = async (remitente, contenido) => {
             }
 
             // todo: Paso Agente Humano Arbol
-            if (arbolChat === 'Paso Agente Humano' || arbolChat === 'Alerta No Entiendo - Paso Agente Humano') {
+            if (arbolChat === 'Solicitar Paso Agente Humano' || arbolChat === 'Alerta No Entiendo - Solicitar Paso Agente Humano') {
                 return await procesarPasoAgenteHumano_SoulChat(idChat, remitente, contenido);
+            }
+
+            // todo: Comunicacion Widget Chat Soul Arbol
+            if (arbolChat === 'Comunicacion Widget Chat Soul' || arbolChat === 'Alerta No Entiendo - Comunicacion Widget Chat Soul') {
+                return await procesarComunicacionWidgetChatSoul(idChat, remitente, contenido);
             }
 
             return true;
@@ -873,56 +878,181 @@ const procesarPasoAgenteHumano_SoulChat = async (idChat, remitente) => {
             remitente: remitente,
             estado: "START",
             mensaje: contenido,
-            type: "TEXT"
+            type: "TEXT",
+            responsable: dataEstatica.configuracion.responsable
         };
         
-        // Control de intentos
-        if (chatData.controlPeticiones <= 5) {
-            
-            // Consumir servicio de AI Soul
-            const response = await serviceSoulChat.procesarMensajeAISoul(estructuraMensaje);
-            chatData.resultadoApi = JSON.stringify(response.data);
-
-            // Si la respuesta tiene status 200 o 202
-            if (response.status === 200 || response.status === 202) {
-                chatData.controlApi = dataEstatica.configuracion.controlApi.success;
-                chatData.descripcion = 'AI Soul ha recibido el mensaje, se encuentra procesando la respuesta.';
+        // Sistema de reintentos automáticos
+        let intento = 1;
+        const maxIntentos = 5;
+        let response = null;
+        let error = null;
+        
+        while (intento <= maxIntentos) {
+            try {
+                console.log(`🔄 Intento ${intento} de ${maxIntentos} para conectar con Soul Chat...`);
                 
-                // Actualizar el chat
-                await modelChat.actualizar(idChat, dataEstatica.arbol.solicitarPasoAgenteHumano, chatData);
+                // Consumir servicio de Soul Chat
+                response = await serviceSoulChat.procesarMensajeSoulChat(estructuraMensaje);
                 
-                // No enviar mensaje adicional, ya se envió el mensaje inicial en solicitarPasoAgenteHumano
-                return true;
-            } else {
-                chatData.controlPeticiones++;
-                chatData.descripcion = 'AI Soul está presentando una novedad o incidencia técnica.';
+                // Si la respuesta tiene status 200 o 202, éxito
+                if (response.status === 200 || response.status === 202) {
+                    chatData.controlApi = dataEstatica.configuracion.controlApi.success;
+                    chatData.controlPeticiones = intento; // Guardar el número de intentos exitosos
+                    chatData.resultadoApi = JSON.stringify(response.data);
+                    chatData.descripcion = `Soul Chat ha recibido el mensaje exitosamente en el intento ${intento}, se encuentra procesando la respuesta.`;
+                    
+                    // Actualizar el chat
+                    await modelChat.actualizar(idChat, dataEstatica.arbol.comunicacionWidgetChatSoul, chatData);
+                    
+                    console.log(`✅ Conexión exitosa con Soul Chat en el intento ${intento}`);
+                    return true;
+                } else {
+                    // Respuesta con error HTTP, incrementar contador y continuar con el siguiente intento
+                    chatData.controlPeticiones = intento;
+                    chatData.descripcion = `Soul Chat respondió con error HTTP ${response.status} en el intento ${intento}. Reintentando...`;
+                    
+                    console.log(`⚠️ Intento ${intento}: Error HTTP ${response.status} - ${response.statusText}`);
+                    
+                    // Actualizar el chat con el estado actual
+                    await modelChat.actualizar(idChat, dataEstatica.arbol.errorApi, chatData);
+                    
+                    // Si no es el último intento, esperar un poco antes de reintentar
+                    if (intento < maxIntentos) {
+                        await new Promise(resolve => setTimeout(resolve, 30000)); // Esperar 30 segundos
+                    }
+                }
+            } catch (apiError) {
+                // Error de conexión o timeout, incrementar contador y continuar
+                error = apiError;
+                chatData.controlPeticiones = intento;
+                chatData.descripcion = `Error de conexión con Soul Chat en el intento ${intento}: ${apiError.message}. Reintentando...`;
                 
-                // Actualizar el chat
+                console.log(`❌ Intento ${intento}: Error de conexión - ${apiError.message}`);
+                
+                // Actualizar el chat con el estado actual
                 await modelChat.actualizar(idChat, dataEstatica.arbol.errorApi, chatData);
-
-                // Enviar mensaje de error por API
-                const api = 'Soul Chat';
-                const procesoApi = 'Procesar Mensaje AI';
-                const error = response;
-                return await errorAPI(api, procesoApi, error, idChat, remitente);
+                
+                // Si no es el último intento, esperar un poco antes de reintentar
+                if (intento < maxIntentos) {
+                    await new Promise(resolve => setTimeout(resolve, 30000)); // Esperar 30 segundos
+                }
             }
-
-        } else {
-            chatData.descripcion = 'Se presenta novedad con el servicio de AI Soul, se procede a cerrar el chat por límite de intentos.';
             
-            // Crear mensaje de novedad o incidencia técnica
-            await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.novedadIncidenciaTecnica, chatData.descripcion);
-
-            // Cerrar el chat
-            await modelChat.cerrar(remitente, dataEstatica.configuracion.estadoChat.recibido, dataEstatica.configuracion.estadoGestion.cerrado, dataEstatica.arbol.despedida, dataEstatica.configuracion.controlApi.error, chatData.descripcion, dataEstatica.configuracion.estadoRegistro.activo, dataEstatica.configuracion.responsable);
-            
-            return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.finChat, dataEstatica.mensajes.despedida, 'Chat cerrado por límite de intentos con AI Soul.');
+            intento++;
         }
+        
+        // Si llegamos aquí, se agotaron todos los intentos
+        chatData.descripcion = `Se agotaron los ${maxIntentos} intentos de conexión con Soul Chat. Se procede a cerrar el chat.`;
+        chatData.controlPeticiones = maxIntentos;
+        
+        console.log(`🚫 Se agotaron los ${maxIntentos} intentos de conexión con Soul Chat`);
+        
+        // Crear mensaje de novedad o incidencia técnica
+        await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.novedadIncidenciaTecnica, chatData.descripcion);
+
+        // Cerrar el chat
+        await modelChat.cerrar(remitente, dataEstatica.configuracion.estadoChat.recibido, dataEstatica.configuracion.estadoGestion.cerrado, dataEstatica.arbol.despedida, dataEstatica.configuracion.controlApi.error, chatData.descripcion, dataEstatica.configuracion.estadoRegistro.activo, dataEstatica.configuracion.responsable);
+        
+        return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.finChat, dataEstatica.mensajes.despedida, `Chat cerrado por agotar los ${maxIntentos} intentos de conexión con AI Soul.`);
 
     } catch (error) {
         const api = 'Soul Chat';
-        const procesoApi = 'Procesar Mensaje AI';
+        const procesoApi = 'Procesar Mensaje Widget';
         console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → procesarPasoAgenteHumano_SoulChat: ', error);
+        return await errorAPI(api, procesoApi, error, idChat, remitente);
+    }
+};
+
+// todo: Procesar Comunicacion Widget Chat Soul Arbol
+const procesarComunicacionWidgetChatSoul = async (idChat, remitente, contenido) => {
+    try {
+        const estructuraMensaje = {
+            provider: "web",
+            canal: 3,
+            idChat: idChat,
+            remitente: remitente,
+            estado: "START",
+            mensaje: contenido,
+            type: "TEXT",
+            responsable: dataEstatica.configuracion.responsable
+        };
+        
+        // Sistema de reintentos automáticos
+        let intento = 1;
+        const maxIntentos = 5;
+        let response = null;
+        let error = null;
+        
+        while (intento <= maxIntentos) {
+            try {
+                console.log(`🔄 Intento ${intento} de ${maxIntentos} para conectar con Soul Chat...`);
+                
+                // Consumir servicio de Soul Chat
+                response = await serviceSoulChat.procesarMensajeSoulChat(estructuraMensaje);
+                
+                // Si la respuesta tiene status 200 o 202, éxito
+                if (response.status === 200 || response.status === 202) {
+                    chatData.controlApi = dataEstatica.configuracion.controlApi.success;
+                    chatData.controlPeticiones = intento; // Guardar el número de intentos exitosos
+                    chatData.resultadoApi = JSON.stringify(response.data);
+                    chatData.descripcion = `Soul Chat ha recibido el mensaje exitosamente en el intento ${intento}, se encuentra procesando la respuesta.`;
+                    
+                    console.log(`✅ Conexión exitosa con Soul Chat en el intento ${intento}`);
+                    return true;
+                } else {
+                    // Respuesta con error HTTP, incrementar contador y continuar con el siguiente intento
+                    chatData.controlPeticiones = intento;
+                    chatData.descripcion = `Soul Chat respondió con error HTTP ${response.status} en el intento ${intento}. Reintentando...`;
+                    
+                    console.log(`⚠️ Intento ${intento}: Error HTTP ${response.status} - ${response.statusText}`);
+                    
+                    // Actualizar el chat con el estado actual
+                    await modelChat.actualizar(idChat, dataEstatica.arbol.errorApi, chatData);
+                    
+                    // Si no es el último intento, esperar un poco antes de reintentar
+                    if (intento < maxIntentos) {
+                        await new Promise(resolve => setTimeout(resolve, 30000)); // Esperar 30 segundos
+                    }
+                }
+            } catch (apiError) {
+                // Error de conexión o timeout, incrementar contador y continuar
+                error = apiError;
+                chatData.controlPeticiones = intento;
+                chatData.descripcion = `Error de conexión con Soul Chat en el intento ${intento}: ${apiError.message}. Reintentando...`;
+                
+                console.log(`❌ Intento ${intento}: Error de conexión - ${apiError.message}`);
+                
+                // Actualizar el chat con el estado actual
+                await modelChat.actualizar(idChat, dataEstatica.arbol.errorApi, chatData);
+                
+                // Si no es el último intento, esperar un poco antes de reintentar
+                if (intento < maxIntentos) {
+                    await new Promise(resolve => setTimeout(resolve, 30000)); // Esperar 30 segundos
+                }
+            }
+            
+            intento++;
+        }
+        
+        // Si llegamos aquí, se agotaron todos los intentos
+        chatData.descripcion = `Se agotaron los ${maxIntentos} intentos de conexión con Soul Chat. Se procede a cerrar el chat.`;
+        chatData.controlPeticiones = maxIntentos;
+        
+        console.log(`🚫 Se agotaron los ${maxIntentos} intentos de conexión con Soul Chat`);
+        
+        // Crear mensaje de novedad o incidencia técnica
+        await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.texto, dataEstatica.mensajes.novedadIncidenciaTecnica, chatData.descripcion);
+
+        // Cerrar el chat
+        await modelChat.cerrar(remitente, dataEstatica.configuracion.estadoChat.recibido, dataEstatica.configuracion.estadoGestion.cerrado, dataEstatica.arbol.despedida, dataEstatica.configuracion.controlApi.error, chatData.descripcion, dataEstatica.configuracion.estadoRegistro.activo, dataEstatica.configuracion.responsable);
+        
+        return await crearMensaje(idChat, remitente, dataEstatica.configuracion.estadoMensaje.enviado, dataEstatica.configuracion.tipoMensaje.finChat, dataEstatica.mensajes.despedida, `Chat cerrado por agotar los ${maxIntentos} intentos de conexión con AI Soul.`);
+
+    } catch (error) {
+        const api = 'Soul Chat';
+        const procesoApi = 'Procesar Mensaje Widget';
+        console.log('❌ Error en v1/models/widget/arbolChatBot.model.js → procesarComunicacionWidgetChatSoul: ', error);
         return await errorAPI(api, procesoApi, error, idChat, remitente);
     }
 };

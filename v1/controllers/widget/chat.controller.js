@@ -482,15 +482,17 @@ const cerrarSoulChat = async (req, res) => {
         // todo: Obtener los datos de la petición
         const {
             idChat,
-            remitente,
-            estadoChat,
-            estadoGestion,
-            arbol,
-            controlApi,
-            descripcion,
-            estadoRegistro,
-            responsable
+            remitente
         } = req.body;
+
+        // todo: Data por defecto
+        const estadoChat = dataEstatica.configuracion.estadoChat.recibido;
+        const estadoGestion = dataEstatica.configuracion.estadoGestion.cerrado;
+        const arbol = dataEstatica.arbol.despedida;
+        const controlApi = dataEstatica.configuracion.controlApi.success;
+        const descripcion = 'Se cierra el chat directamente por parte del usuario desde soul chat.';
+        const estadoRegistro = dataEstatica.configuracion.estadoRegistro.activo;
+        const responsable = dataEstatica.configuracion.responsable;
 
         // todo: Cerrar el chat
         const result = await model.cerrarSoulChat(remitente, estadoChat, estadoGestion, arbol, controlApi, descripcion, estadoRegistro, responsable);

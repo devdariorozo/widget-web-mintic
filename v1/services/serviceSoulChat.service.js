@@ -11,9 +11,9 @@ const axios = require('axios');
 const path = require('path');
 require('dotenv').config({ path: './../../.env' });
 
-// ! PROCESAR MENSAJE AI SOUL
+// ! PROCESAR MENSAJE SOUL CHAT
 // * CONSUMO API
-const procesarMensajeAISoul = async (estructuraMensaje) => {
+const procesarMensajeSoulChat = async (estructuraMensaje) => {
     const url = `${process.env.URL_API_SOUL_CHAT}/v1/messenger/in-message`;
     try {
         const response = await axios.post(url, estructuraMensaje, {
@@ -31,5 +31,5 @@ const procesarMensajeAISoul = async (estructuraMensaje) => {
 
 // ! EXPORTACIONES
 module.exports = {
-    procesarMensajeAISoul,
+    procesarMensajeSoulChat,
 };

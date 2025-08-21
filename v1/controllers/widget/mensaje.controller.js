@@ -16,6 +16,7 @@ const model = require('../../models/widget/mensaje.model.js');
 const dataEstatica = require('../../seeds/dataEstatica.js');
 const modelChat = require('../../models/widget/chat.model.js');
 const modelArbolChatBot = require('../../models/widget/arbolChatBot.model.js');
+const serviceSoulChat = require('../../services/serviceSoulChat.service.js');
 
 // ! CONTROLADORES
 // * CREAR
@@ -121,12 +122,14 @@ const crearSoulChat = async (req, res) => {
             estado,
             tipo,
             contenido,
-            enlaces,
-            lectura,
-            descripcion,
-            registro,
-            responsable
+            enlaces
         } = req.body;
+
+        // todo: Data por defecto
+        const lectura = dataEstatica.configuracion.lecturaMensaje.noLeido;
+        const descripcion = 'Se crea el mensaje solicitado por soul chat con éxito.';
+        const registro = dataEstatica.configuracion.estadoRegistro.activo;
+        const responsable = dataEstatica.configuracion.responsable;
 
         // todo: Crear el registro
         const result = await model.crear(idChat, remitente, estado, tipo, contenido, enlaces, lectura, descripcion, registro, responsable);
@@ -448,17 +451,85 @@ const vigilaInactividadChat = async (req, res) => {
                 }
                 // Cierre del chat a los 5 minutos
                 else if (tiempoInactividad >= 5) {
+                    // todo: Crear mensaje de cierre por inactividad
                     await modelArbolChatBot.crearMensajeCierreInactividad(idChatWeb);
+
+                    const descripcion = 'Chat cerrado por inactividad.';
+                    
+                    // todo: Cerrar el chat
                     await modelChat.cerrar(
                         idChatWeb,
                         dataEstatica.configuracion.estadoChat.recibido,
                         dataEstatica.configuracion.estadoGestion.cerrado,
                         dataEstatica.arbol.cerradoPorInactividad,
                         dataEstatica.configuracion.controlApi.success,
-                        'Chat cerrado por inactividad.',
+                        descripcion,
                         dataEstatica.configuracion.estadoRegistro.activo,
                         dataEstatica.configuracion.responsable
                     );
+                    
+                    // todo: Consumir servicio de soul chat para notificar cierre de chat, cambiando el estado de START a CLOSE
+                    const estructuraMensaje = {
+                        provider: "web",
+                        canal: 3,
+                        idChat: chat[0].ID_CHAT,
+                        remitente: idChatWeb,
+                        estado: "CLOSE",
+                        mensaje: descripcion,
+                        type: "TEXT",
+                        responsable: dataEstatica.configuracion.responsable
+                    }
+                        
+                    // Sistema de reintentos automáticos para notificar cierre de chat
+                    let intento = 1;
+                    const maxIntentos = 5;
+                    let response = null;
+                    let error = null;
+                    
+                    while (intento <= maxIntentos) {
+                        try {
+                            console.log(`🔄 Intento ${intento} de ${maxIntentos} para notificar cierre de chat a Soul Chat...`);
+                            
+                            // Consumir servicio de Soul Chat
+                            response = await serviceSoulChat.procesarMensajeSoulChat(estructuraMensaje);
+                            
+                            // Si la respuesta tiene status 200 o 202, éxito
+                            if (response.status === 200 || response.status === 202) {
+                                console.log(`✅ Notificación de cierre de chat enviada exitosamente a Soul Chat en el intento ${intento}`);
+                                break; // Salir del bucle de reintentos
+                            } else {
+                                // Respuesta con error HTTP, incrementar contador y continuar con el siguiente intento
+                                console.log(`⚠️ Intento ${intento}: Error HTTP ${response.status} - ${response.statusText}`);
+                                
+                                // Si no es el último intento, esperar antes de reintentar
+                                if (intento < maxIntentos) {
+                                    console.log(`⏳ Esperando 30 segundos antes del siguiente intento...`);
+                                    await new Promise(resolve => setTimeout(resolve, 30000)); // Esperar 30 segundos
+                                }
+                            }
+                        } catch (apiError) {
+                            // Error de conexión o timeout, incrementar contador y continuar
+                            error = apiError;
+                            console.log(`❌ Intento ${intento}: Error de conexión - ${apiError.message}`);
+                            
+                            // Si no es el último intento, esperar antes de reintentar
+                            if (intento < maxIntentos) {
+                                console.log(`⏳ Esperando 30 segundos antes del siguiente intento...`);
+                                await new Promise(resolve => setTimeout(resolve, 30000)); // Esperar 30 segundos
+                            }
+                        }
+                        
+                        intento++;
+                    }
+                    
+                    // Verificar si se logró enviar la notificación
+                    if (intento > maxIntentos) {
+                        console.log(`🚫 Se agotaron los ${maxIntentos} intentos para notificar cierre de chat a Soul Chat`);
+                    } else {
+                        console.log(`✅ Notificación de cierre de chat enviada a Soul Chat exitosamente`);
+                    }
+                    
+                    return true;
                 }
             }
         }

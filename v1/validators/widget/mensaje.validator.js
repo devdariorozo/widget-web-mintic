@@ -61,31 +61,7 @@ const crearSoulChat = [
                 return true;
             }
             return value.length > 0;
-        }).withMessage('El campo "enlaces" debe ser un guión (-) o contener un valor válido...'),
-
-    // todo: Validar campo 'lectura'
-    body('lectura')
-        .trim()
-        .notEmpty().withMessage('El campo "lectura" no puede estar vacío...')
-        .isIn(['No leido']).withMessage('El campo "lectura" debe ser "No leido"'),
-
-    // todo: Validar campo 'descripcion'
-    body('descripcion')
-        .trim()
-        .notEmpty().withMessage('El campo "descripcion" no puede estar vacío...'),
-
-    // todo: Validar campo 'registro'
-    body('registro')
-        .trim()
-        .notEmpty().withMessage('El campo "registro" no puede estar vacío...')
-        .isIn(['Activo']).withMessage('El campo "registro" debe ser "Activo"'),
-
-    // todo: Validar campo 'responsable'
-    body('responsable')
-        .trim()
-        .notEmpty().withMessage('El campo "responsable" no puede estar vacío...')
-        .isIn(['Chat Web MinTic']).withMessage('El campo "responsable" debe ser "Chat Web MinTic"'),
-    
+        }).withMessage('El campo "enlaces" debe ser un guión (-) o contener un valor válido...'),    
 ];
 
 // * LISTAR NO LEÍDOS

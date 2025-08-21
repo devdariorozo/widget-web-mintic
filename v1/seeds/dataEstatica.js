@@ -45,6 +45,7 @@ const arbol = {
     corregirDatosIngresados: 'Corregir Datos Ingresados',
     solicitarCanalAtencion: 'Solicitar Canal Atencion',
     solicitarPasoAgenteHumano: 'Solicitar Paso Agente Humano',
+    comunicacionWidgetChatSoul: 'Comunicacion Widget Chat Soul',
     solicitarVideoLlamada: 'Solicitar Video Llamada',
     condicionAdjuntos: 'Condicion Adjuntos',
     confirmarAdjuntos: 'Confirmar Adjuntos',
