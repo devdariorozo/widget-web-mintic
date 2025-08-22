@@ -4,7 +4,7 @@
 -- @author Ramón Dario Rozo Torres (24 de Enero de 2025)
 -- @lastModified Ramón Dario Rozo Torres (24 de Enero de 2025)
 -- @version 1.0.0
--- v1/migrations/widget/chat/2025_01_24_create_tbl_historico_chat.sql
+-- v1/migrations/widget/chat/2025_08_22_create_tbl_historico_chat.sql
 
 -- ! ELIMINAR TABLA SI EXISTE
 DROP TABLE IF EXISTS `tbl_historico_chat`;
