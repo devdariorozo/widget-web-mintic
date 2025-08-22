@@ -7,7 +7,7 @@
 // v1/widget/chatWeb.js
 
 // ! VARIABLES GLOBALES
-const APP_URL = 'https://trends-seating-finds-replacing.trycloudflare.com';
+const APP_URL = 'https://grad-girls-mothers-writings.trycloudflare.com';
 let chatWeb = '';
 let idChatWeb = '';
 let chatCreado = false; // Variable para rastrear si el chat ya ha sido creado
