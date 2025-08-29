@@ -89,8 +89,8 @@ html, body {
 
 /* ! ESTILO PARA EL ÍCONO DEL BOTÓN DE TOGGLE DEL CHAT */
 #contenedorWidget .img-btn {
-  height: 4rem;
-  margin-right: -1rem;
+  height: 4rem !important;
+  margin-right: 0rem !important;
   cursor: pointer;
 }
 
@@ -437,8 +437,8 @@ html, body {
   display: none;
 }
 :root {
-  --chat-widget-right: 1.5rem;
-  --chat-widget-bottom: 1.5rem;
+  --chat-widget-right: 1rem;
+  --chat-widget-bottom: 1rem;
   --chat-btn-right: 2.5rem;
   --chat-btn-bottom: 2.5rem;
 }
@@ -451,8 +451,8 @@ html, body {
 /* Para pantallas grandes */
 @media screen and (min-width: 769px) {
   :root {
-    --chat-widget-right: 1.5rem;
-    --chat-widget-bottom: 1.5rem;
+    --chat-widget-right: 1rem;
+    --chat-widget-bottom: 1rem;
     --chat-btn-right: 2.5rem;
     --chat-btn-bottom: 2.5rem;
   }
