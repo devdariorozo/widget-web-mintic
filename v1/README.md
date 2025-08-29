@@ -660,8 +660,8 @@ Los logs se generan en:
 - **Monitor**: https://demoXXXXXXXXXXXXXX.com/widget/chat/monitor
 
 ### Ambientes de Producción
-- **URL**: https://XXXXXXXXXXXXXX.com
-- **Monitor**: https://XXXXXXXXXXXXXX.com/widget/chat/monitor
+- **URL**: https://mintic-widget.mysoul.software
+- **Monitor**: https://mintic-widget.mysoul.software/widget/chat/monitor
 
 ## 📞 Soporte
 
